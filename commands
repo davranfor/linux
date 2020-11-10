@@ -57,7 +57,7 @@ gnome-screenshot --window --remove-border --delay=1 -f shot.png
 # An alternative to gksu
 # Adds alias at the bottom
 echo "# An alternative to gksu" | tee -a ~/.bash_aliases
-echo "alias gksu='pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY'" | tee -a ~/.bash_aliases
+echo alias gksu=\''pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY'\' | tee -a ~/.bash_aliases
 
 # ------------------------------------------------------------------------------------------------
 # Profile with valgrind
