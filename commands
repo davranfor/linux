@@ -1,0 +1,66 @@
+# ------------------------------------------------------------------------------------------------
+# Replace all ocurrences of foo with bar in a folder (recursive)
+find . -type f -exec sed -i 's/foo/bar/g' {} +
+# Same but filtering files with .c or .cpp or .h
+find . -regex '.*/.*\.\(c\|cpp\|h\)$' -exec sed -i 's/foo/bar/g' {} +
+# Find all ocurrences of foo in a folder
+find . -type f -exec grep "foo" {} +
+# Find and show the 20 bigger files sorted by size
+find . -type f -printf '%s %p\n' | sort -nr | head -20
+
+# ------------------------------------------------------------------------------------------------
+# Concatenate 2 files
+cat file2 >> file1
+
+# ------------------------------------------------------------------------------------------------
+# Pack
+tar -cvf foo.tar foo
+# Pack multiple
+tar -cvf foo.tar.gz /home/foo /home/bar
+# Pack multiple excluding
+tar -cvf foo.tar.gz /home/foobar --exclude=/home/foo --exclude=/home/bar
+# Unpack
+tar -xvf foo.tar
+
+# ------------------------------------------------------------------------------------------------
+# Compress
+tar -czvf foo.tar.gz foo
+# Compress multiple
+tar -czvf foo.tar.gz /home/foo /home/bar
+# Compress multiple excluding
+tar -czvf foo.tar.gz /home/foobar --exclude=/home/foo --exclude=/home/bar
+# Uncompress
+tar -xzvf foo.tar.gz
+
+# ------------------------------------------------------------------------------------------------
+# Generate random UUID
+uuidgen
+# Generate random UUID replacing all ocurrences of minus with underscore
+uuidgen | sed "s/-/_/g"
+
+# ------------------------------------------------------------------------------------------------
+# Exec a line of history (where 42 is the line marked in the ouptput)
+history
+!42
+# Delete all entries in history
+history -c
+# See history file
+cat $HOME/.bash_history
+# Give more room to history
+echo "export HISTSIZE=1000" >> ~/.bashrc
+
+# ------------------------------------------------------------------------------------------------
+# Take a screenshot of the current focused window in a second and save it as shot.png
+gnome-screenshot --window --remove-border --delay=1 -f shot.png
+
+# ------------------------------------------------------------------------------------------------
+# An alternative to gksu
+# Adds alias at the bottom
+echo "# An alternative to gksu" | tee -a ~/.bash_aliases
+echo "alias gksu='pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY'" | tee -a ~/.bash_aliases
+
+# ------------------------------------------------------------------------------------------------
+# Profile with valgrind
+valgrind --tool=callgrind ./demo
+kcachegrind callgrind.out.id
+
