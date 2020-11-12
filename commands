@@ -1,3 +1,6 @@
+# View disk space in human readable format showing specific file system types
+df -h -T
+
 # ------------------------------------------------------------------------------------------------
 # Replace all ocurrences of foo with bar in a folder (recursive)
 find . -type f -exec sed -i 's/foo/bar/g' {} +
