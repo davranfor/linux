@@ -1,5 +1,10 @@
+# ------------------------------------------------------------------------------------------------
 # View disk space in human readable format showing specific file system types
 df -h -T
+
+# ------------------------------------------------------------------------------------------------
+# Concatenate 2 files
+cat file2 >> file1
 
 # ------------------------------------------------------------------------------------------------
 # Replace all ocurrences of foo with bar in a folder (recursive)
@@ -10,10 +15,6 @@ find . -regex '.*/.*\.\(c\|cpp\|h\)$' -exec sed -i 's/foo/bar/g' {} +
 find . -type f -exec grep "foo" {} +
 # Find and show the 20 bigger files sorted by size
 find . -type f -printf '%s %p\n' | sort -nr | head -20
-
-# ------------------------------------------------------------------------------------------------
-# Concatenate 2 files
-cat file2 >> file1
 
 # ------------------------------------------------------------------------------------------------
 # Pack
