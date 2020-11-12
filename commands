@@ -1,6 +1,10 @@
 # ------------------------------------------------------------------------------------------------
 # View disk space in human readable format showing specific file system types
-df -h -T
+df -Th
+
+# ------------------------------------------------------------------------------------------------
+# Displays disk usage of all files and folders in human readeable format
+du -ah /home/foo
 
 # ------------------------------------------------------------------------------------------------
 # Concatenate 2 files
