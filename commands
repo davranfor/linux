@@ -1,10 +1,19 @@
 # ------------------------------------------------------------------------------------------------
-# View disk space in human readable format showing specific file system types
+# disk free - Displays disk space in human readable format showing specific file system types
 df -Th
 
 # ------------------------------------------------------------------------------------------------
-# Displays disk usage of all files and folders in human readeable format
+# disk usage - Displays disk usage of all files and folders in human readeable format
 du -ah /home/foo
+
+# ------------------------------------------------------------------------------------------------
+# Show running processes as a tree
+pstree
+# Show the process id of a process
+pgrep firefox
+# Combined with kill
+kill $(pgrep firefox)
+
 
 # ------------------------------------------------------------------------------------------------
 # Concatenate 2 files
