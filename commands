@@ -12,11 +12,15 @@ ps -e
 # Show all processes with more details
 ps -el
 # Show the PID of a process
+pidof firefox
+# Show the PID of a process (another way)
 pgrep firefox
 # Combined with kill
 kill $(pgrep firefox)
 # Show running processes as a tree
 pstree
+# Show a running process as a tree
+pstree -p $(pgrep firefox)
 
 # ------------------------------------------------------------------------------------------------
 # Concatenate 2 files
