@@ -7,27 +7,28 @@ df -Th
 du -ah /home/foo
 
 # ------------------------------------------------------------------------------------------------
-# Show all processes
-ps -e
-# Show all processes with more details
-ps -el
-# Show the PID of a process
-pidof firefox
-# Show the PID of a process (another way)
-pgrep firefox
-# Combined with kill
-kill $(pgrep firefox)
-# Show running processes as a tree
-pstree
-# Show a running process as a tree
-pstree -p $(pgrep firefox)
-
-# ------------------------------------------------------------------------------------------------
 # Concatenate 2 files
 cat file2 >> file1
 
 # ------------------------------------------------------------------------------------------------
-# Replace all ocurrences of foo with bar in a folder (recursive)
+# Show number of apparences of the character ',' in a filtered line of the file foo.txt
+grep "extern int foo" foo.txt | tr -dc "," | wc -m
+
+# ------------------------------------------------------------------------------------------------
+# All those commands using find are recursive
+# Search file foo.bar
+find . -name "foo.bar"
+# Search files with extension png
+find . -name "*.png"
+# Search files starting with foo
+find . -name "foo*"
+# Search files ending with foo
+find . -name "*foo"
+# Search files containing foo
+find . -name "*foo*"
+# Same than previous calls but case insensitive (find "abc" and also "aBc")
+find . -iname "abc"
+# Replace all ocurrences of foo with bar in a folder
 find . -type f -exec sed -i 's/foo/bar/g' {} +
 # Same but filtering files with .c or .cpp or .h
 find . -regex '.*/.*\.\(c\|cpp\|h\)$' -exec sed -i 's/foo/bar/g' {} +
@@ -66,10 +67,16 @@ uuidgen | sed "s/-/_/g"
 # Execute a line of history (where 42 is the line marked in the ouptput)
 history
 !42
+# View one page at a time
+history | less
+# View last 10 lines
+history | tail
+# View last 25 lines
+history 25
 # Delete line 42
 history -d 42
-# Delete 5 lines starting from line 42 
-history -d 42
+# Delete from line 42 to line 50
+history -d 42-50
 # Delete all lines starting from line 42 
 history -d 42-$((HISTCMD-1))
 # Execute a command without leaving any trace in history
@@ -84,6 +91,22 @@ cat $HOME/.bash_history
 echo "export HISTSIZE=1000" >> ~/.bashrc
 # Show the 5 most used commands
 history | awk '{print $2}' | awk 'BEGIN {FS="|"} {print $1}' | sort | uniq -c | sort -rn | head -5
+
+# ------------------------------------------------------------------------------------------------
+# Show all processes
+ps -e
+# Show all processes with more details
+ps -el
+# Show the PID of a process
+pidof firefox
+# Show the PID of a process (another way)
+pgrep firefox
+# Combined with kill
+kill $(pgrep firefox)
+# Show running processes as a tree
+pstree
+# Show a running process as a tree
+pstree -p $(pgrep firefox)
 
 # ------------------------------------------------------------------------------------------------
 # Take a screenshot of the current focused window in a second and save it as shot.png
