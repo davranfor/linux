@@ -149,6 +149,12 @@ CFLAGS="-std=c11 -Wpedantic -Wall -Wextra" make demo && ./demo
 # ------------------------------------------------------------------------------------------------
 # Bash
 # ------------------------------------------------------------------------------------------------
+# Executes command2 only if command1 completes successfully
+command1 && command2
+# Another way
+if command1; then
+command2
+# ------------------------------------------------------------------------------------------------
 # for each dir
 #!/bin/bash
 for d in */ ; do
@@ -160,4 +166,27 @@ done
 for d in $(find . -type d); do
     echo "$d"
 done
+# ------------------------------------------------------------------------------------------------
+# Do not echo input coming from a terminal
+#!/bin/bash
+echo "Enter password:"
+read -s input
+echo "Your password is" [$input]
+# ------------------------------------------------------------------------------------------------
+#!/bin/bash
+# For each .c file in this folder (sorted by filename)
+for i in *.c; do
+    [ -f "$i" ] || break
+    # grep lines starting with a letter or underscore 
+    #          and ending with ')' or '{' or '}' ignoring trailing spaces
+    grep --with-filename --line-number --color '^[a-z|A-Z|_].*[)|{|} ]$' $i
+done
+# ------------------------------------------------------------------------------------------------
+# Run script if user is root
+#!/bin/bash
+if [[ $EUID -ne 0 ]]; then
+    echo "You must be root to run this script"
+    exit 1    
+fi
+echo "Hello root"
 
