@@ -7,8 +7,16 @@ df -Th
 du -ah /home/foo
 
 # ------------------------------------------------------------------------------------------------
+# Lists information about all available or the specified block devices
+lsblk
+
+# ------------------------------------------------------------------------------------------------
 # Concatenate 2 files
 cat file2 >> file1
+
+# ------------------------------------------------------------------------------------------------
+# Show the date using format dd/mm/yyyy - hh:mm:ss
+date "+%d-%m-%Y - %H:%M:%S"
 
 # ------------------------------------------------------------------------------------------------
 # Show number of apparences of the character ',' in a filtered line of the file foo.txt
@@ -32,6 +40,9 @@ find . -iname "abc"
 find . -type f -exec sed -i 's/foo/bar/g' {} +
 # Same but filtering files with .c or .cpp or .h
 find . -regex '.*/.*\.\(c\|cpp\|h\)$' -exec sed -i 's/foo/bar/g' {} +
+# Search .js files not starting with "use strict"
+find . -name '*.js' -exec grep -L "^use strict" {} +
+find . -name '*.js' | xargs grep -L '^use strict'
 # Find all ocurrences of foo in a folder
 find . -type f -exec grep "foo" {} +
 # Find and show the 20 bigger files sorted by size
@@ -109,6 +120,14 @@ pstree
 pstree -p $(pgrep firefox)
 
 # ------------------------------------------------------------------------------------------------
+# Convert UTF8 to ASCII
+echo cañón | iconv -f utf-8 -t ascii//TRANSLIT
+
+# ------------------------------------------------------------------------------------------------
+# Download in quiet mode a raw file from github and store the file in a temp folder
+wget -q https://raw.githubusercontent.com/davranfor/linux/main/commands -O $HOME/temp/commands
+
+# ------------------------------------------------------------------------------------------------
 # Take a screenshot of the current focused window in a second and save it as shot.png
 gnome-screenshot --window --remove-border --delay=1 -f shot.png
 
@@ -122,4 +141,23 @@ echo alias gksu=\''pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY'\' | tee -
 # Profile with valgrind
 valgrind --tool=callgrind ./demo
 kcachegrind callgrind.out.id
+
+# ------------------------------------------------------------------------------------------------
+# Compile and run with make
+CFLAGS="-std=c11 -Wpedantic -Wall -Wextra" make demo && ./demo
+
+# ------------------------------------------------------------------------------------------------
+# Bash
+# ------------------------------------------------------------------------------------------------
+# for each dir
+#!/bin/bash
+for d in */ ; do
+    echo "$d"
+done
+# ------------------------------------------------------------------------------------------------
+# for each dir recursive
+#!/bin/bash
+for d in $(find . -type d); do
+    echo "$d"
+done
 
