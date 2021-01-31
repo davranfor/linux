@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # ------------------------------------------------------------------------------------------------
 # disk free - Displays disk space in human readable format showing specific file system types
 df -Th
@@ -132,6 +134,10 @@ wget -q https://raw.githubusercontent.com/davranfor/linux/main/commands -O $HOME
 gnome-screenshot --window --remove-border --delay=1 -f shot.png
 
 # ------------------------------------------------------------------------------------------------
+# Open all files in current directory with gedit
+gedit *.* &
+
+# ------------------------------------------------------------------------------------------------
 # An alternative to gksu
 # Adds alias at the bottom
 echo "# An alternative to gksu" | tee -a ~/.bash_aliases
@@ -167,26 +173,25 @@ for d in $(find . -type d); do
     echo "$d"
 done
 # ------------------------------------------------------------------------------------------------
-# Do not echo input coming from a terminal
-#!/bin/bash
-echo "Enter password:"
-read -s input
-echo "Your password is" [$input]
-# ------------------------------------------------------------------------------------------------
 #!/bin/bash
 # For each .c file in this folder (sorted by filename)
-for i in *.c; do
-    [ -f "$i" ] || break
+for f in *.c; do
+    [ -f "$f" ] || break
     # grep lines starting with a letter or underscore 
     #          and ending with ')' or '{' or '}' ignoring trailing spaces
-    grep --with-filename --line-number --color '^[a-z|A-Z|_].*[)|{|} ]$' $i
+    grep --with-filename --line-number --color '^[a-z|A-Z|_].*[)|{|} ]$' $f
 done
+# ------------------------------------------------------------------------------------------------
+# Do not echo input coming from a terminal
+read -s -p "Enter password:" input
+echo
+echo "Your password is" \'$input\'
 # ------------------------------------------------------------------------------------------------
 # Run script if user is root
 #!/bin/bash
 if [[ $EUID -ne 0 ]]; then
     echo "You must be root to run this script"
-    exit 1    
+    exit 1   
 fi
 echo "Hello root"
 
