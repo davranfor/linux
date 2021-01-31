@@ -154,18 +154,23 @@ gedit *.* &
 
 # ------------------------------------------------------------------------------------------------
 # An alternative to gksu
-# Adds alias at the bottom
+# Set a permanent alias
 echo "# An alternative to gksu" | tee -a ~/.bash_aliases
 echo alias gksu=\''pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY'\' | tee -a ~/.bash_aliases
+
+# ------------------------------------------------------------------------------------------------
+# Compile and run with make
+CFLAGS="-std=c11 -Wpedantic -Wall -Wextra -lm" make demo && ./demo
+
+# ------------------------------------------------------------------------------------------------
+# Set a permanent alias to compile and run at once
+echo "# C Compile and run" | tee -a ~/.bash_aliases
+echo alias ccar=\''gcc -std=c11 -Wpedantic -Wall -Wextra -lm -o demo demo.c && ./demo'\' | tee -a ~/.bash_aliases
 
 # ------------------------------------------------------------------------------------------------
 # Profile with valgrind
 valgrind --tool=callgrind ./demo
 kcachegrind callgrind.out.id
-
-# ------------------------------------------------------------------------------------------------
-# Compile and run with make
-CFLAGS="-std=c11 -Wpedantic -Wall -Wextra" make demo && ./demo
 
 # ------------------------------------------------------------------------------------------------
 # Bash
