@@ -9,7 +9,7 @@ df -Th
 du -ah /home/foo
 
 # ------------------------------------------------------------------------------------------------
-# Lists information about all available or the specified block devices
+# Lists blocks devices
 lsblk
 
 # ------------------------------------------------------------------------------------------------
