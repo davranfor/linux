@@ -130,6 +130,21 @@ echo cañón | iconv -f utf-8 -t ascii//TRANSLIT
 wget -q https://raw.githubusercontent.com/davranfor/linux/main/commands -O $HOME/temp/commands
 
 # ------------------------------------------------------------------------------------------------
+# ssh connect
+ssh user@domain
+# ssh connect on a port other than 22
+ssh user@domain -p 2222
+# ssh connect with graphical user interface
+ssh -X user@domain program
+# Secure copy using scp
+# --> scp -P 2222 --> to specify a port
+# --> scp -r --> to copy a directory
+# copy a local file to a remote system
+scp file.txt user@domain:/remote/directory
+# copy a remote file to a local file
+scp user@domain:/remote/file file.txt
+
+# ------------------------------------------------------------------------------------------------
 # Take a screenshot of the current focused window in a second and save it as shot.png
 gnome-screenshot --window --remove-border --delay=1 -f shot.png
 
