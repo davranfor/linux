@@ -71,6 +71,17 @@ tar -czvf foo.tar.gz /home/foobar --exclude=/home/foo --exclude=/home/bar
 tar -xzvf foo.tar.gz
 
 # ------------------------------------------------------------------------------------------------
+# Copy device drivers
+# From image to device
+sudo dd if=/some/path/file.img of=/dev/sda
+# From device to image
+sudo dd if=/dev/sda of=/some/path/file.img
+# From device to image (compressed)
+sudo dd if=/dev/sda | gzip -c > /some/path/file.img.gz
+# Showing status
+sudo dd if=/dev/sda of=/some/path/file.img status=progress
+
+# ------------------------------------------------------------------------------------------------
 # Generate random UUID
 uuidgen
 # Generate random UUID replacing all ocurrences of minus with underscore
