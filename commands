@@ -7,14 +7,27 @@ df -Th
 # ------------------------------------------------------------------------------------------------
 # disk usage - Displays disk usage of all files and folders in human readeable format
 du -ah /home/foo
+# Without listing files and folders
+du -sh /home/foo
 
 # ------------------------------------------------------------------------------------------------
 # Lists blocks devices
 lsblk
 
 # ------------------------------------------------------------------------------------------------
+# System information
+cat /proc/meminfo
+cat /proc/cpuinfo
+
+# ------------------------------------------------------------------------------------------------
 # Concatenate 2 files
 cat file2 >> file1
+
+# ------------------------------------------------------------------------------------------------
+# Copy files from remote or local host
+rsync source dest
+# Showing pstatus
+rsync --progress source dest
 
 # ------------------------------------------------------------------------------------------------
 # Show the date using format dd/mm/yyyy - hh:mm:ss
@@ -150,7 +163,7 @@ ssh -X user@domain program
 # Secure copy using scp
 # --> scp -P 2222 --> to specify a port
 # --> scp -r --> to copy a directory
-# copy a local file to a remote system
+# copy a local file to a remote file
 scp file.txt user@domain:/remote/directory
 # copy a remote file to a local file
 scp user@domain:/remote/file file.txt
