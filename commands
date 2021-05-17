@@ -18,6 +18,15 @@ lsblk
 # System information
 cat /proc/meminfo
 cat /proc/cpuinfo
+# Hardware information
+lshw
+# Information about all PCI buses in the system and all devices connected to them
+lspci
+
+# ------------------------------------------------------------------------------------------------
+# Mount partition
+echo "/dev/sdb1 /home/foo   ext4    user    0   0" | tee -a /etc/fstab
+mount -a
 
 # ------------------------------------------------------------------------------------------------
 # Concatenate 2 files
@@ -218,12 +227,18 @@ for d in $(find . -type d); do
 done
 # ------------------------------------------------------------------------------------------------
 #!/bin/bash
+# for each .c or .h file recursive
+for f in $(find . -name '*.c' -or -name '*.h'); do
+    echo "$f"
+done
+# ------------------------------------------------------------------------------------------------
+#!/bin/bash
 # For each .c file in this folder (sorted by filename)
 for f in *.c; do
     [ -f "$f" ] || break
     # grep lines starting with a letter or underscore 
     #          and ending with ')' or '{' or '}' ignoring trailing spaces
-    grep --with-filename --line-number --color '^[a-z|A-Z|_].*[)|{|} ]$' $f
+    grep --with-filename --line-number --color '^[a-z|A-Z|_].*[)|{|} ]$' "$f"
 done
 # ------------------------------------------------------------------------------------------------
 # Do not echo input coming from a terminal
