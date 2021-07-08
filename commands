@@ -35,7 +35,7 @@ cat file2 >> file1
 # ------------------------------------------------------------------------------------------------
 # Copy files from remote or local host
 rsync source dest
-# Showing pstatus
+# Showing progress status
 rsync --progress source dest
 
 # ------------------------------------------------------------------------------------------------
@@ -198,7 +198,7 @@ CFLAGS="-std=c11 -Wpedantic -Wall -Wextra -lm" make demo && ./demo
 # ------------------------------------------------------------------------------------------------
 # Set a permanent alias to compile and run at once
 echo "# C Compile and run" | tee -a ~/.bash_aliases
-echo alias ccar=\''gcc -std=c11 -Wpedantic -Wall -Wextra -lm -o demo demo.c && ./demo'\' | tee -a ~/.bash_aliases
+echo alias ccar=\''gcc -std=c11 -Wpedantic -Wall -Wextra demo.c -o demo -lm && ./demo'\' | tee -a ~/.bash_aliases
 
 # ------------------------------------------------------------------------------------------------
 # Profile with valgrind
