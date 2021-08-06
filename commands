@@ -18,6 +18,8 @@ lsblk
 # System information
 cat /proc/meminfo
 cat /proc/cpuinfo
+# Process information
+cat /proc/$(pidof process)/status
 # Hardware information
 lshw
 # Information about all PCI buses in the system and all devices connected to them
@@ -193,12 +195,12 @@ echo alias gksu=\''pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY'\' | tee -
 
 # ------------------------------------------------------------------------------------------------
 # Compile and run with make
-CFLAGS="-std=c11 -Wpedantic -Wall -Wextra -lm" make demo && ./demo
+CFLAGS="-std=c11 -Wpedantic -Wall -Wextra -g -lm" make demo && ./demo
 
 # ------------------------------------------------------------------------------------------------
 # Set a permanent alias to compile and run at once
 echo "# C Compile and run" | tee -a ~/.bash_aliases
-echo alias ccar=\''gcc -std=c11 -Wpedantic -Wall -Wextra demo.c -o demo -lm && ./demo'\' | tee -a ~/.bash_aliases
+echo alias ccar=\''gcc -std=c11 -Wpedantic -Wall -Wextra -g -o demo demo.c -lm -pthread && ./demo'\' | tee -a ~/.bash_aliases
 
 # ------------------------------------------------------------------------------------------------
 # Profile with valgrind
