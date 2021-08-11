@@ -26,6 +26,10 @@ lshw
 lspci
 
 # ------------------------------------------------------------------------------------------------
+# Information about GNU Core Utilities
+info coreutils
+
+# ------------------------------------------------------------------------------------------------
 # Mount partition
 echo "/dev/sdb1 /home/foo   ext4    user    0   0" | tee -a /etc/fstab
 mount -a
@@ -180,6 +184,12 @@ scp file.txt user@domain:/remote/directory
 scp user@domain:/remote/file file.txt
 
 # ------------------------------------------------------------------------------------------------
+# Customize xterm window
+xterm -title "Some title" -geometry 80x24+50+50 \
+-bg "dark slate gray" -fg "lemon chiffon" -cr "rosy brown" \
+-fa monaco -fs 14 +bdc -dc -e ./demo
+
+# ------------------------------------------------------------------------------------------------
 # Take a screenshot of the current focused window in a second and save it as shot.png
 gnome-screenshot --window --remove-border --delay=1 -f shot.png
 
@@ -200,7 +210,21 @@ CFLAGS="-std=c11 -Wpedantic -Wall -Wextra -g -lm" make demo && ./demo
 # ------------------------------------------------------------------------------------------------
 # Set a permanent alias to compile and run at once
 echo "# C Compile and run" | tee -a ~/.bash_aliases
-echo alias ccar=\''gcc -std=c11 -Wpedantic -Wall -Wextra -g -o demo demo.c -lm -pthread && ./demo'\' | tee -a ~/.bash_aliases
+echo alias ccar=\''gcc -std=c11 -Wpedantic -Wall -Wextra -g -o demo demo.c -lm && ./demo'\' | tee -a ~/.bash_aliases
+
+# ------------------------------------------------------------------------------------------------
+# List functions in a program
+# The program must contain debugging symbols (compiled with -g)
+# Column 3 != 0 and Column 4 = "FUNC" and Column 8 not starting with _
+readelf -sW program | awk '$3 != 0 && $4 == "FUNC" && $8 !~ /^ ?_/'
+
+# ------------------------------------------------------------------------------------------------
+# Show memory consumed by a process (writeable/private: is malloced)
+pmap -d $(pidof process)
+
+# ------------------------------------------------------------------------------------------------
+# Print predefined macros
+echo | gcc -E -dM -x c -
 
 # ------------------------------------------------------------------------------------------------
 # Profile with valgrind
