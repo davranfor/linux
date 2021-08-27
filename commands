@@ -49,10 +49,6 @@ rsync --progress source dest
 date "+%d-%m-%Y - %H:%M:%S"
 
 # ------------------------------------------------------------------------------------------------
-# Show number of apparences of the character ',' in a filtered line of the file foo.txt
-grep "extern int foo" foo.txt | tr -dc "," | wc -m
-
-# ------------------------------------------------------------------------------------------------
 # All those commands using find are recursive
 # Search file foo.bar
 find . -name "foo.bar"
@@ -77,6 +73,22 @@ find . -name '*.js' | xargs grep -L '^use strict'
 find . -type f -exec grep "foo" {} +
 # Find and show the 20 bigger files sorted by size
 find . -type f -printf '%s %p\n' | sort -nr | head -20
+
+# ------------------------------------------------------------------------------------------------
+# Filter text
+# Find lines containing "error" but discards those containing "file not found"
+cat file | grep -v "file not found" | grep "error:"
+# Find a string (not a regular expression) (recursive) (ignoring binary files)
+grep \
+    --with-filename --line-number \
+    --fixed-strings --ignore-case \
+    --binary-files=without-match \
+    --recursive \
+    "some text"
+# same than
+grep -HnFiIr "some text"
+# Show number of apparences of the character ',' in a filtered line of the file foo.txt
+grep "extern int foo" foo.txt | tr -dc "," | wc -m
 
 # ------------------------------------------------------------------------------------------------
 # Pack
@@ -185,9 +197,11 @@ scp user@domain:/remote/file file.txt
 
 # ------------------------------------------------------------------------------------------------
 # Customize xterm window
-xterm -title "Some title" -geometry 80x24+50+50 \
--bg "dark slate gray" -fg "lemon chiffon" -cr "rosy brown" \
--fa monaco -fs 14 +bdc -dc -e ./demo
+xterm \
+    -title "Some title" -geometry 80x24+50+50 \
+    -bg "dark slate gray" -fg "lemon chiffon" -cr "rosy brown" \
+    -fa monaco -fs 14 +bdc -dc \
+    -e ./demo
 
 # ------------------------------------------------------------------------------------------------
 # Take a screenshot of the current focused window in a second and save it as shot.png
@@ -211,6 +225,17 @@ CFLAGS="-std=c11 -Wpedantic -Wall -Wextra -g -lm" make demo && ./demo
 # Set a permanent alias to compile and run at once
 echo "# C Compile and run" | tee -a ~/.bash_aliases
 echo alias ccar=\''gcc -std=c11 -Wpedantic -Wall -Wextra -g -o demo demo.c -lm && ./demo'\' | tee -a ~/.bash_aliases
+
+# ------------------------------------------------------------------------------------------------
+# gcc warnings
+# List of all supported warnings
+gcc -Q --help=warning
+# Use regex to enable all warnings
+gcc -Q --help=warning | sed -e 's/^\s*\(\-\S*\)\s*\[\w*\]/\1 /gp;d' | tr -d '\n'
+# gcc - Concrete warning as error
+gcc -Werror=format
+# or in the source code
+#pragma GCC diagnostic error "-Wformat"
 
 # ------------------------------------------------------------------------------------------------
 # List functions in a program
