@@ -220,11 +220,17 @@ echo alias gksu=\''pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY'\' | tee -
 # ------------------------------------------------------------------------------------------------
 # Compile and run with make
 CFLAGS="-std=c11 -Wpedantic -Wall -Wextra -g -lm" make demo && ./demo
-
-# ------------------------------------------------------------------------------------------------
 # Set a permanent alias to compile and run at once
 echo "# C Compile and run" | tee -a ~/.bash_aliases
 echo alias ccar=\''gcc -std=c11 -Wpedantic -Wall -Wextra -g -o demo demo.c -lm && ./demo'\' | tee -a ~/.bash_aliases
+
+# ------------------------------------------------------------------------------------------------
+# gcc predefined macros
+echo | gcc -E -dM -x c -
+
+# ------------------------------------------------------------------------------------------------
+# gcc print configuration options
+gcc -v
 
 # ------------------------------------------------------------------------------------------------
 # gcc warnings
@@ -246,10 +252,6 @@ readelf -sW program | awk '$3 != 0 && $4 == "FUNC" && $8 !~ /^ ?_/'
 # ------------------------------------------------------------------------------------------------
 # Show memory consumed by a process (writeable/private: is malloced)
 pmap -d $(pidof process)
-
-# ------------------------------------------------------------------------------------------------
-# Print predefined macros
-echo | gcc -E -dM -x c -
 
 # ------------------------------------------------------------------------------------------------
 # Profile with valgrind
