@@ -62,6 +62,8 @@ find . -name "*foo"
 find . -name "*foo*"
 # Same than previous calls but case insensitive (find "abc" and also "aBc")
 find . -iname "abc"
+# Exclude all "permission denied" messages
+find . > "foo" 2> >(grep -v 'Permission denied' >&2)
 # Replace all ocurrences of foo with bar in a folder
 find . -type f -exec sed -i 's/foo/bar/g' {} +
 # Same but filtering files with .c or .cpp or .h
@@ -292,6 +294,12 @@ for f in *.c; do
     # grep lines starting with a letter or underscore 
     #          and ending with ')' or '{' or '}' ignoring trailing spaces
     grep --with-filename --line-number --color '^[a-z|A-Z|_].*[)|{|} ]$' "$f"
+done
+# ------------------------------------------------------------------------------------------------
+#!/bin/bash
+# For each c/cpp/h file get a diagnosis with clang-tidy
+for f in $(find . -name '*.c' -or -name '*.cpp' -or -name '*.h'); do
+    clang-tidy $f -header-filter=.* -checks=* -- -fblocks $f /dev/null 2>&1
 done
 # ------------------------------------------------------------------------------------------------
 # Do not echo input coming from a terminal
