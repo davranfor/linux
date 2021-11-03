@@ -91,6 +91,10 @@ grep \
 grep -HnFiIr "some text"
 # Show number of apparences of the character ',' in a filtered line of the file foo.txt
 grep "extern int foo" foo.txt | tr -dc "," | wc -m
+# Exclude the word "available"
+printf "a\nis\nnot\navailable\nor\nis\ndisabled\n" | grep -v "available"
+# Exclude the word "available" or "disabled"
+printf "a\nis\nnot\navailable\nor\nis\ndisabled\n" | grep -Ev "available|disabled"
 
 # ------------------------------------------------------------------------------------------------
 # Pack
@@ -264,13 +268,13 @@ kcachegrind callgrind.out.id
 # Bash
 # ------------------------------------------------------------------------------------------------
 # Passing command line arguments
-program "one" "two" "three"
+command "one" "two" "three"
 # or
-echo "one" "two" "three" | xargs program
+echo "one" "two" "three" | xargs command
 #or
-cat file | xargs program
+cat file | xargs command
 # or
-program $(< file)
+command $(< file)
 # Executes command2 only if command1 completes successfully
 command1 && command2
 # Another way
