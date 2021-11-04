@@ -269,12 +269,13 @@ kcachegrind callgrind.out.id
 # ------------------------------------------------------------------------------------------------
 # Passing command line arguments
 command "one" "two" "three"
-# or
 echo "one" "two" "three" | xargs command
-#or
 cat file | xargs command
-# or
 command $(< file)
+# Passing through stdin
+printf "this\nis\na\ntest\n" | command
+cat file | command
+command < file
 # Executes command2 only if command1 completes successfully
 command1 && command2
 # Another way
