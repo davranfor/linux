@@ -72,9 +72,13 @@ find . -regex '.*/.*\.\(c\|cpp\|h\)$' -exec sed -i 's/foo/bar/g' {} +
 find . -name '*.js' -exec grep -L "^use strict" {} +
 find . -name '*.js' | xargs grep -L '^use strict'
 # Find all ocurrences of foo in a folder
-find . -type f -exec grep "foo" {} +
+find . -type f -exec grep 'foo' {} +
 # Find and show the 20 bigger files sorted by size
 find . -type f -printf '%s %p\n' | sort -nr | head -20
+# grep and redirect to a file lines containing the text "xargs", redirect errors to /dev/null
+find . -type f -print 2>/dev/null | xargs grep "xargs" > ~/files
+# show .sh files sorted by column 5 as integer and redirect to a file
+find . -name "*.sh" | xargs ls -l | sort -nk 5 > ~/files
 
 # ------------------------------------------------------------------------------------------------
 # Filter text
@@ -316,6 +320,7 @@ for f in $(find . -name '*.c' -or -name '*.cpp' -or -name '*.h'); do
 done
 # ------------------------------------------------------------------------------------------------
 # Do not echo input coming from a terminal
+#!/bin/bash
 read -s -p "Enter password:" input
 echo
 echo "Your password is" \'$input\'
@@ -327,4 +332,11 @@ if [[ $EUID -ne 0 ]]; then
     exit 1   
 fi
 echo "Hello root"
+# ------------------------------------------------------------------------------------------------
+# Disable canonical mode
+#!/bin/bash
+tty_settings=$(stty --save)     # Save current settings
+stty -icanon                    # Disable canonical mode
+read line                       # Now we can read without inhibitions set by terminal
+stty $tty_settings              # Restore old settings
 
