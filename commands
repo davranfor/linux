@@ -341,9 +341,9 @@ echo "Hello root"
 # ./script.sh file.txt
 #!/bin/bash
 if [ $# -gt 0 ]; then
-	paste=$(cat "$@")
+    paste=$(cat "$@")
 else
-	paste=$(cat)
+    paste=$(cat)
 fi
 printf "%s\n" "$paste"
 # ------------------------------------------------------------------------------------------------
