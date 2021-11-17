@@ -260,13 +260,16 @@ gcc -Werror=format
 readelf -sW program | awk '$3 != 0 && $4 == "FUNC" && $8 !~ /^ ?_/'
 
 # ------------------------------------------------------------------------------------------------
-# Show memory consumed by a process (writeable/private: is malloced)
-pmap -d $(pidof process)
+# Show memory consumed by a process (writeable/private: is malloced) (sudo is required)
+sudo pmap -d $(pidof process)
 
 # ------------------------------------------------------------------------------------------------
-# Profile with valgrind
+# Profile
 valgrind --tool=callgrind ./demo
 kcachegrind callgrind.out.id
+# Show heap consumption snapshots (creates a file massif.out.pid)
+valgrind --tool=massif ./demo
+ms_print massif.out.pid
 
 # ------------------------------------------------------------------------------------------------
 # Bash
@@ -333,10 +336,22 @@ if [[ $EUID -ne 0 ]]; then
 fi
 echo "Hello root"
 # ------------------------------------------------------------------------------------------------
-# Disable canonical mode
+# Take filenames from commandline or from stdin
+# cat file.txt | ./script.sh"
+# ./script.sh file.txt
 #!/bin/bash
-tty_settings=$(stty --save)     # Save current settings
-stty -icanon                    # Disable canonical mode
-read line                       # Now we can read without inhibitions set by terminal
-stty $tty_settings              # Restore old settings
+if [ $# -gt 0 ]; then
+	paste=$(cat "$@")
+else
+	paste=$(cat)
+fi
+printf "%s\n" "$paste"
+# ------------------------------------------------------------------------------------------------
+# stdin unlimited
+#!/bin/bash
+tty=$(stty --save)  # Save settings
+IFS=$'\n'           # Allow spaces and other white spaces
+stty -icanon        # Disable canonical mode
+read line           # Now we can read without inhibitions set by terminal
+stty "$tty"         # Restore settings
 
