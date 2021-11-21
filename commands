@@ -45,6 +45,10 @@ rsync source dest
 rsync --progress source dest
 
 # ------------------------------------------------------------------------------------------------
+# Read 25 random lines from a file
+shuf -n 25 /usr/share/dict/words
+
+# ------------------------------------------------------------------------------------------------
 # Show the date using format dd/mm/yyyy - hh:mm:ss
 date "+%d-%m-%Y - %H:%M:%S"
 
@@ -274,7 +278,7 @@ ms_print massif.out.pid
 # ------------------------------------------------------------------------------------------------
 # Bash
 # ------------------------------------------------------------------------------------------------
-# Passing command line arguments
+# Passing through command line arguments
 command "one" "two" "three"
 echo "one" "two" "three" | xargs command
 cat file | xargs command
@@ -283,20 +287,22 @@ command $(< file)
 printf "this\nis\na\ntest\n" | command
 cat file | command
 command < file
+command "$(cat file)" # The whole file as an argument
+# ------------------------------------------------------------------------------------------------
 # Executes command2 only if command1 completes successfully
 command1 && command2
 # Another way
 if command1; then
 command2
 # ------------------------------------------------------------------------------------------------
-# for each dir
 #!/bin/bash
+# for each dir
 for d in */ ; do
     echo "$d"
 done
 # ------------------------------------------------------------------------------------------------
-# for each dir recursive
 #!/bin/bash
+# for each dir recursive
 for d in $(find . -type d); do
     echo "$d"
 done
@@ -322,24 +328,24 @@ for f in $(find . -name '*.c' -or -name '*.cpp' -or -name '*.h'); do
     clang-tidy $f -header-filter=.* -checks=* -- -fblocks $f /dev/null 2>&1
 done
 # ------------------------------------------------------------------------------------------------
-# Do not echo input coming from a terminal
 #!/bin/bash
+# Do not echo input coming from a terminal
 read -s -p "Enter password:" input
 echo
 echo "Your password is" \'$input\'
 # ------------------------------------------------------------------------------------------------
-# Run script if user is root
 #!/bin/bash
+# Run script if user is root
 if [[ $EUID -ne 0 ]]; then
     echo "You must be root to run this script"
     exit 1   
 fi
 echo "Hello root"
 # ------------------------------------------------------------------------------------------------
-# Take filenames from commandline or from stdin
 # cat file.txt | ./script.sh"
 # ./script.sh file.txt
 #!/bin/bash
+# Take filenames from command line or from stdin
 if [ $# -gt 0 ]; then
     paste=$(cat "$@")
 else
@@ -347,8 +353,8 @@ else
 fi
 printf "%s\n" "$paste"
 # ------------------------------------------------------------------------------------------------
-# stdin unlimited
 #!/bin/bash
+# stdin unlimited
 tty=$(stty --save)  # Save settings
 IFS=$'\n'           # Allow spaces and other white spaces
 stty -icanon        # Disable canonical mode
