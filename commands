@@ -88,7 +88,7 @@ find . -name "*.sh" | xargs ls -l | sort -nk 5 > ~/files
 # Filter text
 # Find lines containing "error" but discards those containing "file not found"
 cat file | grep -v "file not found" | grep "error:"
-# Find a string (not a regular expression) (recursive) (ignoring binary files)
+# Find lines containing "some text" (not a regular expression) (recursive) (ignoring binary files)
 grep \
     --with-filename --line-number \
     --fixed-strings --ignore-case \
@@ -97,6 +97,15 @@ grep \
     "some text"
 # same than
 grep -HnFiIr "some text"
+# Find lines containing "some" and "text" (regular expression) (recursive) (ignoring binary files)
+grep \
+    --with-filename --line-number \
+    --extended-regexp --ignore-case \
+    --binary-files=without-match \
+    --recursive \
+    "(some)+.*(text)+"
+# same than
+grep -HnEiIr "(some)+.*(text)+"
 # Show number of apparences of the character ',' in a filtered line of the file foo.txt
 grep "extern int foo" foo.txt | tr -dc "," | wc -m
 # Exclude the word "available"
@@ -283,11 +292,11 @@ command "one" "two" "three"
 echo "one" "two" "three" | xargs command
 cat file | xargs command
 command $(< file)
+command "$(cat file)" # The whole file as an argument
 # Passing through stdin
 printf "this\nis\na\ntest\n" | command
 cat file | command
 command < file
-command "$(cat file)" # The whole file as an argument
 # ------------------------------------------------------------------------------------------------
 # Executes command2 only if command1 completes successfully
 command1 && command2
@@ -360,4 +369,13 @@ IFS=$'\n'           # Allow spaces and other white spaces
 stty -icanon        # Disable canonical mode
 read line           # Now we can read without inhibitions set by terminal
 stty "$tty"         # Restore settings
+# ------------------------------------------------------------------------------------------------
+#!/bin/bash
+# Find text
+text="one two three\nfour five six\nseven eight nine"
+if [[ $text == *"five"* ]]; then
+    echo "'five' found"
+else
+    echo "'five' not found"
+fi
 
