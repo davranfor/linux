@@ -30,6 +30,10 @@ lspci
 info coreutils
 
 # ------------------------------------------------------------------------------------------------
+# Print all environment variables
+printenv
+
+# ------------------------------------------------------------------------------------------------
 # Mount partition
 echo "/dev/sdb1 /home/foo   ext4    user    0   0" | tee -a /etc/fstab
 mount -a
@@ -112,6 +116,14 @@ grep "extern int foo" foo.txt | tr -dc "," | wc -m
 printf "a\nis\nnot\navailable\nor\nis\ndisabled\n" | grep -v "available"
 # Exclude the word "available" or "disabled"
 printf "a\nis\nnot\navailable\nor\nis\ndisabled\n" | grep -Ev "available|disabled"
+# Colorize words containing "main" in a file
+grep -E --color 'main|$' demo.c
+# Colorize lines containing "main" in a file
+grep -E --color '.*main.*|$' demo.c
+# Colorize words containing "sda" in a command e.g.: lsblk
+lsblk | grep -E --color 'sda|$'
+# Colorize lines containing "sda" in a command e.g.: lsblk
+lsblk | grep -E --color '.*sda.*|$'
 
 # ------------------------------------------------------------------------------------------------
 # Pack
@@ -351,6 +363,14 @@ if [[ $EUID -ne 0 ]]; then
 fi
 echo "Hello root"
 # ------------------------------------------------------------------------------------------------
+#!/bin/bash
+# Prompt user yes or no
+read -p "Are you sure? [y/n] " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    echo "Done!"
+fi
+# ------------------------------------------------------------------------------------------------
 # cat file.txt | ./script.sh"
 # ./script.sh file.txt
 #!/bin/bash
@@ -378,4 +398,10 @@ if [[ $text == *"five"* ]]; then
 else
     echo "'five' not found"
 fi
+# ------------------------------------------------------------------------------------------------
+#!/bin/bash
+#Colorize text
+RED='\033[0;31m'
+NC='\033[0m' # No Color
+printf "one ${RED}two${NC} three\n"
 
