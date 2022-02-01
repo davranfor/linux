@@ -283,6 +283,10 @@ gcc -Werror=format
 # The program must contain debugging symbols (compiled with -g)
 # Column 3 != 0 and Column 4 = "FUNC" and Column 8 not starting with _
 readelf -sW program | awk '$3 != 0 && $4 == "FUNC" && $8 !~ /^ ?_/'
+# Same sorted by function name
+readelf -sW program | awk '$3 != 0 && $4 == "FUNC" && $8 !~ /^ ?_/' | sort -k8
+# Same displaying only the function name (sorted)
+readelf -sW program | awk '$3 != 0 && $4 == "FUNC" && $8 !~ /^ ?_/ {print $8}' | sort
 
 # ------------------------------------------------------------------------------------------------
 # Show memory consumed by a process (writeable/private: is malloced) (sudo is required)
@@ -401,7 +405,7 @@ fi
 # ------------------------------------------------------------------------------------------------
 #!/bin/bash
 #Colorize text
-RED='\033[0;31m'
-NC='\033[0m' # No Color
-printf "one ${RED}two${NC} three\n"
+red='\033[0;31m'
+noc='\033[0m' # No Color
+printf "one ${red}two${noc} three\n"
 
