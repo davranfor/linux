@@ -404,6 +404,14 @@ else
 fi
 # ------------------------------------------------------------------------------------------------
 #!/bin/bash
+# Detect if a shell script is running through a pipe
+if [ -t 1 ] ; then
+    echo "Not running through a pipe (in a terminal)"
+else
+    echo "Running through a pipe (not in a terminal)"
+fi
+# ------------------------------------------------------------------------------------------------
+#!/bin/bash
 #Colorize text
 red='\033[0;31m'
 noc='\033[0m' # No Color
