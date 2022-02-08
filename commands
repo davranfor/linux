@@ -87,6 +87,26 @@ find . -type f -printf '%s %p\n' | sort -nr | head -20
 find . -type f -print 2>/dev/null | xargs grep "xargs" > ~/files
 # show .sh files sorted by column 5 as integer and redirect to a file
 find . -name "*.sh" | xargs ls -l | sort -nk 5 > ~/files
+# ------------------------------------------------------------------------------------------------
+# find -exec
+# The -exec action allows us to execute commands on the resulting paths
+# Two types of delimiters can be provided: the semi-colon ';' or the plus sign '+'
+# ------------------------------------------------------------------------------------------------
+# If we use the semi-colon ';' the -exec command will be repeated for each result separately
+# As we don’t want our shell to interpret the semi-colon, we need to escape it: \;
+touch a.txt b.txt c.txt
+find . -name "*.txt" -exec echo {} \;
+# Output:
+./a.txt
+./b.txt
+./c.txt
+# ------------------------------------------------------------------------------------------------
+# If we use the plus sign '+' all of the expressions results will be concatenated and passed as a
+# whole to the -exec command which will run only once
+touch a.txt b.txt c.txt
+find . -name "*.txt" -exec echo {} +
+# Output:
+./a.txt ./b.txt ./c.txt
 
 # ------------------------------------------------------------------------------------------------
 # Filter text
