@@ -26,6 +26,12 @@ lshw
 lspci
 
 # ------------------------------------------------------------------------------------------------
+# Display file or file system status
+stat -c "%a %U:%G %n" demo
+# Output:
+# 775 david:david demo
+
+# ------------------------------------------------------------------------------------------------
 # Information about GNU Core Utilities
 info coreutils
 
@@ -175,6 +181,8 @@ sudo dd if=/dev/sda of=/some/path/file.img
 sudo dd if=/dev/sda | gzip -c > /some/path/file.img.gz
 # Showing status
 sudo dd if=/dev/sda of=/some/path/file.img status=progress
+# Read and write up to 2 megas at a time (default is 512 bytes)
+sudo dd if=/dev/sda of=/some/path/file.img bs=2M
 
 # ------------------------------------------------------------------------------------------------
 # Generate random UUID
@@ -257,6 +265,9 @@ xterm \
     -bg "dark slate gray" -fg "lemon chiffon" -cr "rosy brown" \
     -fa monaco -fs 14 +bdc -dc \
     -e ./demo
+
+# Show a popup
+notify-send 'WARNING' 'Temperature very high'
 
 # ------------------------------------------------------------------------------------------------
 # Take a screenshot of the current focused window in a second and save it as shot.png
