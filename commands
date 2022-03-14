@@ -20,6 +20,10 @@ cat /proc/meminfo
 cat /proc/cpuinfo
 # Process information
 cat /proc/$(pidof process)/status
+# Monitorize region of contiguous virtual memory in a process or thread
+# 50 threads - refresh every 0.1 seconds
+watch -n 0.1 tail -50 /proc/<pid>/maps
+
 # Hardware information
 lshw
 # Information about all PCI buses in the system and all devices connected to them
@@ -234,6 +238,8 @@ kill $(pgrep firefox)
 pstree
 # Show a running process as a tree
 pstree -p $(pgrep firefox)
+# Monitorize process
+top -H -p <pid>
 
 # ------------------------------------------------------------------------------------------------
 # Convert UTF8 to ASCII
