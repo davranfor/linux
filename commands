@@ -21,7 +21,7 @@ cat /proc/cpuinfo
 # Process information
 cat /proc/$(pidof process)/status
 # Monitorize region of contiguous virtual memory in a process or thread
-# 50 threads - refresh every 0.1 seconds
+# Last 50 lines - Refresh every 0.1 seconds
 watch -n 0.1 tail -50 /proc/<pid>/maps
 
 # Hardware information
