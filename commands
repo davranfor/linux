@@ -28,6 +28,10 @@ watch -n 0.1 tail -50 /proc/<pid>/maps
 lshw
 # Information about all PCI buses in the system and all devices connected to them
 lspci
+# Diagnostic messages
+sudo dmesg
+# Diagnostic messages (Error section)
+sudo dmesg -l err
 
 # ------------------------------------------------------------------------------------------------
 # Display file or file system status
@@ -80,8 +84,8 @@ find . -name "*foo"
 find . -name "*foo*"
 # Same than previous calls but case insensitive (find "abc" and also "aBc")
 find . -iname "abc"
-# Exclude all "permission denied" messages
-find . > "foo" 2> >(grep -v 'Permission denied' >&2)
+# Exclude all "Permission denied" messages
+find . -name "foo" 2>&1 | grep -v 'Permission denied'
 # Replace all ocurrences of foo with bar in a folder
 find . -type f -exec sed -i 's/foo/bar/g' {} +
 # Same but filtering files with .c or .cpp or .h
@@ -344,6 +348,7 @@ ms_print massif.out.pid
 command "one" "two" "three"
 echo "one" "two" "three" | xargs command
 cat file | xargs command
+cat file | xargs -0 command # The whole file as an argument
 command $(< file)
 command "$(cat file)" # The whole file as an argument
 # Passing through stdin
