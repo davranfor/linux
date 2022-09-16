@@ -33,6 +33,9 @@ sudo dmesg
 # Diagnostic messages (Error section)
 sudo dmesg -l err
 
+# Port information
+cat /etc/services
+
 # ------------------------------------------------------------------------------------------------
 # Display file or file system status
 stat -c "%a %U:%G %n" demo
@@ -48,6 +51,10 @@ info coreutils
 # ------------------------------------------------------------------------------------------------
 # Print all environment variables
 printenv
+
+# ------------------------------------------------------------------------------------------------
+# Change bash prompt
+PS1="some text> "
 
 # ------------------------------------------------------------------------------------------------
 # Mount partition
@@ -67,6 +74,12 @@ rsync --progress source dest
 # ------------------------------------------------------------------------------------------------
 # Read 25 random lines from a file
 shuf -n 25 /usr/share/dict/words
+
+# ------------------------------------------------------------------------------------------------
+# Copy contents from a file to the clipboard
+xclip -selection clipboard -i < in.txt
+# Copy contents from the clipboard to a file
+xclip -selection clipboard -o > out.txt
 
 # ------------------------------------------------------------------------------------------------
 # Show the date using format dd/mm/yyyy - hh:mm:ss
@@ -354,6 +367,7 @@ ms_print massif.out.pid
 # Passing through command line arguments
 command "one" "two" "three"
 echo "one" "two" "three" | xargs command
+xargs -a file command
 cat file | xargs command
 cat file | xargs -0 command # The whole file as an argument
 command $(< file)
