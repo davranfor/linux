@@ -53,6 +53,20 @@ info coreutils
 printenv
 
 # ------------------------------------------------------------------------------------------------
+# Show all users
+awk -F: '{print $1}' /etc/passwd
+# Another way
+cat /etc/passwd | cut -d: -f1
+
+# ------------------------------------------------------------------------------------------------
+# Show all groups
+awk -F: '{print $1}' /etc/group
+# Another way
+cat /etc/group | cut -d: -f1
+# List groups of a user
+groups <username>
+
+# ------------------------------------------------------------------------------------------------
 # Change bash prompt
 PS1="some text> "
 
@@ -240,6 +254,8 @@ echo $HISTCMD
 cat $HOME/.bash_history
 # Give more room to history
 echo "export HISTSIZE=1000" >> ~/.bashrc
+# Display with date and time
+echo 'export HISTTIMEFORMAT="%d/%m/%y %T "' >> ~/.bashrc
 # Show the 5 most used commands
 history | awk '{print $2}' | awk 'BEGIN {FS="|"} {print $1}' | sort | uniq -c | sort -rn | head -5
 
@@ -260,6 +276,20 @@ pstree
 pstree -p $(pgrep firefox)
 # Monitorize process
 top -H -p <pid>
+
+# ------------------------------------------------------------------------------------------------
+# Record all the terminal activities
+script out
+# writ commands here
+exit
+cat out
+
+# ------------------------------------------------------------------------------------------------
+# Run commands in parallel
+./command1 & ./command2 &
+# or
+./command1 &
+./command2 &
 
 # ------------------------------------------------------------------------------------------------
 # Convert UTF8 to ASCII
