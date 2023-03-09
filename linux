@@ -1,0 +1,512 @@
+#!/bin/bash
+
+# ------------------------------------------------------------------------------------------------
+# disk free - Displays disk space in human readable format showing specific file system types
+df -Th
+
+# ------------------------------------------------------------------------------------------------
+# disk usage - Displays disk usage of all files and folders in human readeable format
+du -ah /home/foo
+# Without listing files and folders
+du -sh /home/foo
+
+# ------------------------------------------------------------------------------------------------
+# Lists blocks devices
+lsblk
+
+# ------------------------------------------------------------------------------------------------
+# System information
+cat /proc/meminfo
+cat /proc/cpuinfo
+# Process information
+cat /proc/$(pidof process)/status
+# Monitorize region of contiguous virtual memory in a process or thread
+# Last 50 lines - Refresh every 0.1 seconds
+watch -n 0.1 tail -50 /proc/<pid>/maps
+
+# Hardware information
+lshw
+# Information about all PCI buses in the system and all devices connected to them
+lspci
+# Diagnostic messages
+sudo dmesg
+# Diagnostic messages (Error section)
+sudo dmesg -l err
+
+# Port information
+cat /etc/services
+
+# ------------------------------------------------------------------------------------------------
+# Display file or file system status
+stat -c "%a %U:%G %n" demo
+# Output:
+# 775 david:david demo
+# Detailed for all files in folder
+stat -c '%A %a %h %U %G %s %y %n' *
+
+# ------------------------------------------------------------------------------------------------
+# Information about GNU Core Utilities
+info coreutils
+
+# ------------------------------------------------------------------------------------------------
+# Print all environment variables
+printenv
+
+# ------------------------------------------------------------------------------------------------
+# Show all users
+awk -F: '{print $1}' /etc/passwd
+# Another way
+cat /etc/passwd | cut -d: -f1
+
+# ------------------------------------------------------------------------------------------------
+# Show all groups
+awk -F: '{print $1}' /etc/group
+# Another way
+cat /etc/group | cut -d: -f1
+# List groups of a user
+groups <username>
+
+# ------------------------------------------------------------------------------------------------
+# Change bash prompt
+PS1="some text> "
+
+# ------------------------------------------------------------------------------------------------
+# Mount partition
+echo "/dev/sdb1 /home/foo   ext4    user    0   0" | tee -a /etc/fstab
+mount -a
+
+# ------------------------------------------------------------------------------------------------
+# Concatenate 2 files
+cat file2 >> file1
+
+# ------------------------------------------------------------------------------------------------
+# Copy files from remote or local host
+rsync source dest
+# Showing progress status
+rsync --progress source dest
+
+# ------------------------------------------------------------------------------------------------
+# Read 25 random lines from a file
+shuf -n 25 /usr/share/dict/words
+
+# ------------------------------------------------------------------------------------------------
+# Copy contents from a file to the clipboard
+xclip -selection clipboard -i < in.txt
+# Copy contents from the clipboard to a file
+xclip -selection clipboard -o > out.txt
+
+# ------------------------------------------------------------------------------------------------
+# Show the date using format dd/mm/yyyy - hh:mm:ss
+date "+%d-%m-%Y - %H:%M:%S"
+
+# ------------------------------------------------------------------------------------------------
+# All those commands using find are recursive
+# Search file foo.bar
+find . -name "foo.bar"
+# Search files with extension png
+find . -name "*.png"
+# Search files starting with foo
+find . -name "foo*"
+# Search files ending with foo
+find . -name "*foo"
+# Search files containing foo
+find . -name "*foo*"
+# Same than previous calls but case insensitive (find "abc" and also "aBc")
+find . -iname "abc"
+# Exclude all "Permission denied" messages
+find . -name "foo" 2>/dev/null
+find . -name "foo" 2>&1 | grep -v 'Permission denied'
+# Replace all ocurrences of foo with bar in a folder
+find . -type f -exec sed -i 's/foo/bar/g' {} +
+# Same but filtering files with .c or .cpp or .h
+find . -regex '.*/.*\.\(c\|cpp\|h\)$' -exec sed -i 's/foo/bar/g' {} +
+# Search .js files not starting with "use strict"
+find . -name '*.js' -exec grep -L "^use strict" {} +
+find . -name '*.js' | xargs grep -L '^use strict'
+# Find all ocurrences of foo in a folder
+find . -type f -exec grep 'foo' {} +
+# Find and show the 20 bigger files sorted by size
+find . -type f -printf '%s %p\n' | sort -nr | head -20
+# grep and redirect to a file lines containing the text "xargs", redirect errors to /dev/null
+find . -type f -print 2>/dev/null | xargs grep "xargs" > ~/files
+# show .sh files sorted by column 5 as integer and redirect to a file
+find . -name "*.sh" | xargs ls -l | sort -nk 5 > ~/files
+# ------------------------------------------------------------------------------------------------
+# find -exec
+# The -exec action allows us to execute commands on the resulting paths
+# Two types of delimiters can be provided: the semi-colon ';' or the plus sign '+'
+# ------------------------------------------------------------------------------------------------
+# If we use the semi-colon ';' the -exec command will be repeated for each result separately
+# As we don’t want our shell to interpret the semi-colon, we need to escape it: \;
+touch a.txt b.txt c.txt
+find . -name "*.txt" -exec echo {} \;
+# Output:
+./a.txt
+./b.txt
+./c.txt
+# ------------------------------------------------------------------------------------------------
+# If we use the plus sign '+' all of the expressions results will be concatenated and passed as a
+# whole to the -exec command which will run only once
+touch a.txt b.txt c.txt
+find . -name "*.txt" -exec echo {} +
+# Output:
+./a.txt ./b.txt ./c.txt
+
+# ------------------------------------------------------------------------------------------------
+# Filter text
+# Find lines containing "error" but discards those containing "file not found"
+cat file | grep -v "file not found" | grep "error:"
+# Find lines containing "some text" (not a regular expression) (recursive) (ignoring binary files)
+grep \
+    --with-filename --line-number \
+    --fixed-strings --ignore-case \
+    --binary-files=without-match \
+    --recursive \
+    "some text"
+# same than
+grep -HnFiIr "some text"
+# Find lines containing "some" and "text" (regular expression) (recursive) (ignoring binary files)
+grep \
+    --with-filename --line-number \
+    --extended-regexp --ignore-case \
+    --binary-files=without-match \
+    --recursive \
+    "(some)+.*(text)+"
+# same than
+grep -HnEiIr "(some)+.*(text)+"
+# Show number of apparences of the character ',' in a filtered line of the file foo.txt
+grep "extern int foo" foo.txt | tr -dc "," | wc -m
+# Exclude the word "available"
+printf "a\nis\nnot\navailable\nor\nis\ndisabled\n" | grep -v "available"
+# Exclude the word "available" or "disabled"
+printf "a\nis\nnot\navailable\nor\nis\ndisabled\n" | grep -Ev "available|disabled"
+# Colorize words containing "main" in a file
+grep -E --color 'main|$' demo.c
+# Colorize lines containing "main" in a file
+grep -E --color '.*main.*|$' demo.c
+# Colorize words containing "sda" in a command e.g.: lsblk
+lsblk | grep -E --color 'sda|$'
+# Colorize lines containing "sda" in a command e.g.: lsblk
+lsblk | grep -E --color '.*sda.*|$'
+
+# ------------------------------------------------------------------------------------------------
+# Pack
+tar -cvf foo.tar foo
+# Pack multiple
+tar -cvf foo.tar.gz /home/foo /home/bar
+# Pack multiple excluding
+tar -cvf foo.tar.gz /home/foobar --exclude=/home/foo --exclude=/home/bar
+# Unpack
+tar -xvf foo.tar
+
+# ------------------------------------------------------------------------------------------------
+# Compress
+tar -czvf foo.tar.gz foo
+# Compress multiple
+tar -czvf foo.tar.gz /home/foo /home/bar
+# Compress multiple excluding
+tar -czvf foo.tar.gz /home/foobar --exclude=/home/foo --exclude=/home/bar
+# Uncompress
+tar -xzvf foo.tar.gz
+
+# ------------------------------------------------------------------------------------------------
+# Copy device drivers
+# From image to device
+sudo dd if=/some/path/file.img of=/dev/sda
+# From device to image
+sudo dd if=/dev/sda of=/some/path/file.img
+# From device to image (compressed)
+sudo dd if=/dev/sda | gzip -c > /some/path/file.img.gz
+# Showing status
+sudo dd if=/dev/sda of=/some/path/file.img status=progress
+# Read and write up to 2 megas at a time (default is 512 bytes)
+sudo dd if=/dev/sda of=/some/path/file.img bs=2M
+
+# ------------------------------------------------------------------------------------------------
+# Generate random UUID
+uuidgen
+# Generate random UUID replacing all ocurrences of minus with underscore
+uuidgen | sed "s/-/_/g"
+
+# ------------------------------------------------------------------------------------------------
+# Execute a line of history (where 42 is the line marked in the ouptput)
+history
+!42
+# View one page at a time
+history | less
+# View last 10 lines
+history | tail
+# View last 25 lines
+history 25
+# Delete line 42
+history -d 42
+# Delete from line 42 to line 50
+history -d 42-50
+# Delete all lines starting from line 42 
+history -d 42-$((HISTCMD-1))
+# Execute a command without leaving any trace in history
+history -d $((HISTCMD-1)) && your_command
+# Delete all entries in history
+history -c
+# Get index of next line in history 
+echo $HISTCMD
+# See history file
+cat $HOME/.bash_history
+# Give more room to history
+echo "export HISTSIZE=1000" >> ~/.bashrc
+# Display with date and time
+echo 'export HISTTIMEFORMAT="%d/%m/%y %T "' >> ~/.bashrc
+# Show the 5 most used commands
+history | awk '{print $2}' | awk 'BEGIN {FS="|"} {print $1}' | sort | uniq -c | sort -rn | head -5
+
+# ------------------------------------------------------------------------------------------------
+# Show all processes
+ps -e
+# Show all processes with more details
+ps -el
+# Show the PID of a process
+pidof firefox
+# Show the PID of a process (another way)
+pgrep firefox
+# Combined with kill
+kill $(pgrep firefox)
+# Show running processes as a tree
+pstree
+# Show a running process as a tree
+pstree -p $(pgrep firefox)
+# Monitorize process
+top -H -p <pid>
+
+# ------------------------------------------------------------------------------------------------
+# Record all the terminal activities
+script out
+# writ commands here
+exit
+cat out
+
+# ------------------------------------------------------------------------------------------------
+# Run commands in parallel
+./command1 & ./command2 &
+# or
+./command1 &
+./command2 &
+
+# ------------------------------------------------------------------------------------------------
+# Convert UTF8 to ASCII
+echo cañón | iconv -f utf-8 -t ascii//TRANSLIT
+
+# ------------------------------------------------------------------------------------------------
+# Download in quiet mode a raw file from github and store the file in a temp folder
+wget -q https://raw.githubusercontent.com/davranfor/linux/main/commands -O $HOME/temp/commands
+
+# ------------------------------------------------------------------------------------------------
+# ssh connect
+ssh user@domain
+# ssh connect on a port other than 22
+ssh user@domain -p 2222
+# ssh connect with graphical user interface
+ssh -X user@domain program
+# Secure copy using scp
+# --> scp -P 2222 --> to specify a port
+# --> scp -r --> to copy a directory
+# copy a local file to a remote file
+scp file.txt user@domain:/remote/directory
+# copy a remote file to a local file
+scp user@domain:/remote/file file.txt
+
+# ------------------------------------------------------------------------------------------------
+# Customize xterm window
+xterm \
+    -title "Some title" -geometry 80x24+50+50 \
+    -bg "dark slate gray" -fg "lemon chiffon" -cr "rosy brown" \
+    -fa monaco -fs 14 +bdc -dc \
+    -e ./demo
+
+# Show a popup
+notify-send 'WARNING' 'Temperature very high'
+
+# ------------------------------------------------------------------------------------------------
+# Take a screenshot of the current focused window in a second and save it as shot.png
+gnome-screenshot --window --remove-border --delay=1 -f shot.png
+
+# ------------------------------------------------------------------------------------------------
+# Open all files in current directory with gedit
+gedit *.* &
+
+# ------------------------------------------------------------------------------------------------
+# An alternative to gksu
+# Set a permanent alias
+echo "# An alternative to gksu" | tee -a ~/.bash_aliases
+echo alias gksu=\''pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY'\' | tee -a ~/.bash_aliases
+
+# ------------------------------------------------------------------------------------------------
+# Compile and run with make
+CFLAGS="-std=c11 -Wpedantic -Wall -Wextra -g -lm" make demo && ./demo
+# Set a permanent alias to compile and run at once
+echo "# C Compile and run" | tee -a ~/.bash_aliases
+echo alias ccar=\''gcc -std=c11 -Wpedantic -Wall -Wextra -g -o demo demo.c -lm && ./demo'\' | tee -a ~/.bash_aliases
+
+# ------------------------------------------------------------------------------------------------
+# gcc predefined macros
+echo | gcc -E -dM -x c -
+
+# ------------------------------------------------------------------------------------------------
+# gcc print configuration options
+gcc -v
+
+# ------------------------------------------------------------------------------------------------
+# gcc warnings
+# List of all supported warnings
+gcc -Q --help=warning
+# Use regex to enable all warnings
+gcc -Q --help=warning | sed -e 's/^\s*\(\-\S*\)\s*\[\w*\]/\1 /gp;d' | tr -d '\n'
+# gcc - Concrete warning as error
+gcc -Werror=format
+# or in the source code
+#pragma GCC diagnostic error "-Wformat"
+
+# ------------------------------------------------------------------------------------------------
+# List functions in a program
+# The program must contain debugging symbols (compiled with -g)
+# Column 3 != 0 and Column 4 = "FUNC" and Column 8 not starting with _
+readelf -sW program | awk '$3 != 0 && $4 == "FUNC" && $8 !~ /^ ?_/'
+# Same sorted by function name
+readelf -sW program | awk '$3 != 0 && $4 == "FUNC" && $8 !~ /^ ?_/' | sort -k8
+# Same displaying only the function name (sorted)
+readelf -sW program | awk '$3 != 0 && $4 == "FUNC" && $8 !~ /^ ?_/ {print $8}' | sort
+
+# ------------------------------------------------------------------------------------------------
+# Disassemble a program
+gcc -c -g demo.c && objdump -S -dr demo.o 
+
+# ------------------------------------------------------------------------------------------------
+# Show memory consumed by a process (writeable/private: is malloced) (sudo is required)
+sudo pmap -d $(pidof process)
+
+# ------------------------------------------------------------------------------------------------
+# Profile
+valgrind --tool=callgrind ./demo
+kcachegrind callgrind.out.id
+# Show heap consumption snapshots (creates a file massif.out.pid)
+valgrind --tool=massif ./demo
+ms_print massif.out.pid
+
+# ------------------------------------------------------------------------------------------------
+# Bash
+# ------------------------------------------------------------------------------------------------
+# Passing through command line arguments
+command "one" "two" "three"
+echo "one" "two" "three" | xargs command
+xargs -a file command
+cat file | xargs command
+cat file | xargs -0 command # The whole file as an argument
+command $(< file)
+command "$(cat file)" # The whole file as an argument
+# Passing through stdin
+printf "this\nis\na\ntest\n" | command
+cat file | command
+command < file
+# ------------------------------------------------------------------------------------------------
+# Executes command2 only if command1 completes successfully
+command1 && command2
+# Another way
+if command1; then
+command2
+# ------------------------------------------------------------------------------------------------
+#!/bin/bash
+# for each dir
+for d in */ ; do
+    echo "$d"
+done
+# ------------------------------------------------------------------------------------------------
+#!/bin/bash
+# for each dir recursive
+for d in $(find . -type d); do
+    echo "$d"
+done
+# ------------------------------------------------------------------------------------------------
+#!/bin/bash
+# for each .c or .h file recursive
+for f in $(find . -name '*.c' -or -name '*.h'); do
+    echo "$f"
+done
+# ------------------------------------------------------------------------------------------------
+#!/bin/bash
+# For each .c file in this folder (sorted by filename)
+for f in *.c; do
+    [ -f "$f" ] || break
+    # grep lines starting with a letter or underscore 
+    #          and ending with ')' or '{' or '}' ignoring trailing spaces
+    grep --with-filename --line-number --color '^[a-z|A-Z|_].*[)|{|} ]$' "$f"
+done
+# ------------------------------------------------------------------------------------------------
+#!/bin/bash
+# For each c/cpp/h file get a diagnosis with clang-tidy
+for f in $(find . -name '*.c' -or -name '*.cpp' -or -name '*.h'); do
+    clang-tidy $f -header-filter=.* -checks=* -- -fblocks $f /dev/null 2>&1
+done
+# ------------------------------------------------------------------------------------------------
+#!/bin/bash
+# Do not echo input coming from a terminal
+read -s -p "Enter password:" input
+echo
+echo "Your password is" \'$input\'
+# ------------------------------------------------------------------------------------------------
+#!/bin/bash
+# Run script if user is root
+if [[ $EUID -ne 0 ]]; then
+    echo "You must be root to run this script"
+    exit 1   
+fi
+echo "Hello root"
+# ------------------------------------------------------------------------------------------------
+#!/bin/bash
+# Prompt user yes or no
+read -p "Are you sure? [y/n] " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    echo "Done!"
+fi
+# ------------------------------------------------------------------------------------------------
+# cat file.txt | ./script.sh"
+# ./script.sh file.txt
+#!/bin/bash
+# Take filenames from command line or from stdin
+if [ $# -gt 0 ]; then
+    paste=$(cat "$@")
+else
+    paste=$(cat)
+fi
+printf "%s\n" "$paste"
+# ------------------------------------------------------------------------------------------------
+#!/bin/bash
+# stdin unlimited
+tty=$(stty --save)  # Save settings
+IFS=$'\n'           # Allow spaces and other white spaces
+stty -icanon        # Disable canonical mode
+read line           # Now we can read without inhibitions set by terminal
+stty "$tty"         # Restore settings
+# ------------------------------------------------------------------------------------------------
+#!/bin/bash
+# Find text
+text="one two three\nfour five six\nseven eight nine"
+if [[ $text == *"five"* ]]; then
+    echo "'five' found"
+else
+    echo "'five' not found"
+fi
+# ------------------------------------------------------------------------------------------------
+#!/bin/bash
+# Detect if a shell script is running through a pipe
+if [ -t 1 ] ; then
+    echo "Not running through a pipe (in a terminal)"
+else
+    echo "Running through a pipe (not in a terminal)"
+fi
+# ------------------------------------------------------------------------------------------------
+#!/bin/bash
+#Colorize text
+red='\033[0;31m'
+noc='\033[0m' # No Color
+printf "one ${red}two${noc} three\n"
+
