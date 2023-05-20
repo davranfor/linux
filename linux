@@ -300,6 +300,10 @@ echo cañón | iconv -f utf-8 -t ascii//TRANSLIT
 wget -q https://raw.githubusercontent.com/davranfor/linux/main/commands -O $HOME/temp/commands
 
 # ------------------------------------------------------------------------------------------------
+# python web server in one line
+python3 -m http.server 8080
+
+# ------------------------------------------------------------------------------------------------
 # ssh connect
 ssh user@domain
 # ssh connect on a port other than 22
@@ -344,11 +348,17 @@ echo alias gksu=\''pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY'\' | tee -
 CFLAGS="-std=c11 -Wpedantic -Wall -Wextra -g -lm" make demo && ./demo
 # Set a permanent alias to compile and run at once
 echo "# C Compile and run" | tee -a ~/.bash_aliases
-echo alias ccar=\''gcc -std=c11 -Wpedantic -Wall -Wextra -g -o demo demo.c -lm && ./demo'\' | tee -a ~/.bash_aliases
+echo alias ccar=\''gcc -std=c11 -Wpedantic -Wall -Wextra -Wconversion -g -o demo demo.c -lm && ./demo'\' | tee -a ~/.bash_aliases
 
 # ------------------------------------------------------------------------------------------------
 # gcc predefined macros
 echo | gcc -E -dM -x c -
+
+# ------------------------------------------------------------------------------------------------
+# gcc print dependencies of a file
+gcc -M demo.c
+# Same without system headers
+gcc -MM demo.c
 
 # ------------------------------------------------------------------------------------------------
 # gcc print configuration options
@@ -390,6 +400,10 @@ kcachegrind callgrind.out.id
 # Show heap consumption snapshots (creates a file massif.out.pid)
 valgrind --tool=massif ./demo
 ms_print massif.out.pid
+
+# ------------------------------------------------------------------------------------------------
+# Diagnostic
+cppcheck --std=c11 --enable=all --suppress=missingIncludeSystem .
 
 # ------------------------------------------------------------------------------------------------
 # Bash
