@@ -78,12 +78,10 @@ mount -a
 # ------------------------------------------------------------------------------------------------
 # Concatenate 2 files
 cat file2 >> file1
-
-# ------------------------------------------------------------------------------------------------
-# Copy files from remote or local host
-rsync source dest
-# Showing progress status
-rsync --progress source dest
+# Merge all files in a directory into a single file
+cat ./* > merged-file
+# Same but recursive
+find . ! -path ./merged-file -type f -exec cat {} + > merged-file
 
 # ------------------------------------------------------------------------------------------------
 # Read 25 random lines from a file
@@ -190,6 +188,17 @@ lsblk | grep -E --color 'sda|$'
 lsblk | grep -E --color '.*sda.*|$'
 
 # ------------------------------------------------------------------------------------------------
+# Modify text
+# Prepend the word "begin " to all lines starting with '#' in file foo.txt
+sed -i '/^#/ s/^/begin /' foo.txt
+# Append the word " end" to all lines starting with '#' in file foo.txt
+sed -i '/^#/ s/$/ end/' foo.txt
+
+# ------------------------------------------------------------------------------------------------
+# Remove lines containing a specific text in a file
+sed -i '/text to delete/d' foo.txt
+
+# ------------------------------------------------------------------------------------------------
 # Pack
 tar -cvf foo.tar foo
 # Pack multiple
@@ -280,7 +289,7 @@ top -H -p <pid>
 # ------------------------------------------------------------------------------------------------
 # Record all the terminal activities
 script out
-# writ commands here
+# write commands here
 exit
 cat out
 
@@ -319,6 +328,12 @@ scp file.txt user@domain:/remote/directory
 scp user@domain:/remote/file file.txt
 
 # ------------------------------------------------------------------------------------------------
+# Copy files from remote or local host
+rsync source dest
+# Showing progress status
+rsync --progress source dest
+
+# ------------------------------------------------------------------------------------------------
 # Customize xterm window
 xterm \
     -title "Some title" -geometry 80x24+50+50 \
@@ -338,6 +353,16 @@ gnome-screenshot --window --remove-border --delay=1 -f shot.png
 gedit *.* &
 
 # ------------------------------------------------------------------------------------------------
+# Add $HOME/bin to $PATH
+# Add the following lines to .bashrc:
+# set PATH so it includes user's private bin if it exists
+if [ -d "$HOME/bin" ] ; then
+    PATH="$HOME/bin:$PATH"
+fi
+# and run
+source .bashrc
+
+# ------------------------------------------------------------------------------------------------
 # An alternative to gksu
 # Set a permanent alias
 echo "# An alternative to gksu" | tee -a ~/.bash_aliases
@@ -348,7 +373,7 @@ echo alias gksu=\''pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY'\' | tee -
 CFLAGS="-std=c11 -Wpedantic -Wall -Wextra -g -lm" make demo && ./demo
 # Set a permanent alias to compile and run at once
 echo "# C Compile and run" | tee -a ~/.bash_aliases
-echo alias ccar=\''gcc -std=c11 -Wpedantic -Wall -Wextra -Wconversion -g -o demo demo.c -lm && ./demo'\' | tee -a ~/.bash_aliases
+echo alias ccar=\''gcc -std=c17 -Wpedantic -Wall -Wextra -Wconversion -g -o demo demo.c -lm && ./demo'\' | tee -a ~/.bash_aliases
 
 # ------------------------------------------------------------------------------------------------
 # gcc predefined macros
@@ -374,6 +399,11 @@ gcc -Q --help=warning | sed -e 's/^\s*\(\-\S*\)\s*\[\w*\]/\1 /gp;d' | tr -d '\n'
 gcc -Werror=format
 # or in the source code
 #pragma GCC diagnostic error "-Wformat"
+
+# ------------------------------------------------------------------------------------------------
+# Check which libraries are needed to link for a given package
+pkg-config --libs glfw3
+# Returns `-lglfw`
 
 # ------------------------------------------------------------------------------------------------
 # List functions in a program
