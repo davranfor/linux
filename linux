@@ -24,6 +24,7 @@ cat /proc/$(pidof process)/status
 # Last 50 lines - Refresh every 0.1 seconds
 watch -n 0.1 tail -50 /proc/<pid>/maps
 
+# ------------------------------------------------------------------------------------------------
 # Hardware information
 lshw
 # Information about all PCI buses in the system and all devices connected to them
@@ -33,6 +34,7 @@ sudo dmesg
 # Diagnostic messages (Error section)
 sudo dmesg -l err
 
+# ------------------------------------------------------------------------------------------------
 # Port information
 cat /etc/services
 
@@ -49,10 +51,6 @@ stat -c '%A %a %h %U %G %s %y %n' *
 info coreutils
 
 # ------------------------------------------------------------------------------------------------
-# Print all environment variables
-printenv
-
-# ------------------------------------------------------------------------------------------------
 # Show all users
 awk -F: '{print $1}' /etc/passwd
 # Another way
@@ -67,8 +65,22 @@ cat /etc/group | cut -d: -f1
 groups <username>
 
 # ------------------------------------------------------------------------------------------------
-# Change bash prompt
-PS1="some text> "
+# Show processes
+ps -e
+# Show all processes with more details
+ps -el
+# Show the PID of a process
+pidof firefox
+# Show the PID of a process (another way)
+pgrep firefox
+# Combined with kill
+kill $(pgrep firefox)
+# Show running processes as a tree
+pstree
+# Show a running process as a tree
+pstree -p $(pgrep firefox)
+# Monitorize process
+top -H -p <pid>
 
 # ------------------------------------------------------------------------------------------------
 # Mount partition
@@ -98,6 +110,10 @@ xclip -selection clipboard -o > out.txt
 date "+%d-%m-%Y - %H:%M:%S"
 
 # ------------------------------------------------------------------------------------------------
+# Query or change system time and date settings
+timedatectl
+
+# ------------------------------------------------------------------------------------------------
 # All those commands using find are recursive
 # Search file foo.bar
 find . -name "foo.bar"
@@ -111,6 +127,10 @@ find . -name "*foo"
 find . -name "*foo*"
 # Same than previous calls but case insensitive (find "abc" and also "aBc")
 find . -iname "abc"
+# Find multiple names
+find . -name "*.c" -or -name "*.h"
+# Same but combined with exec
+find . \( -name "*.c" -or -name "*.h" \) -exec file -I {} +
 # Exclude all "Permission denied" messages
 find . -name "foo" 2>/dev/null
 find . -name "foo" 2>&1 | grep -v 'Permission denied'
@@ -123,6 +143,8 @@ find . -name '*.js' -exec grep -L "^use strict" {} +
 find . -name '*.js' | xargs grep -L '^use strict'
 # Find all ocurrences of foo in a folder
 find . -type f -exec grep 'foo' {} +
+# Combine find and ls
+find . -exec ls -dils {} +
 # Find and show the 20 bigger files sorted by size
 find . -type f -printf '%s %p\n' | sort -nr | head -20
 # grep and redirect to a file lines containing the text "xargs", redirect errors to /dev/null
@@ -268,23 +290,6 @@ echo 'export HISTTIMEFORMAT="%d/%m/%y %T "' >> ~/.bashrc
 # Show the 5 most used commands
 history | awk '{print $2}' | awk 'BEGIN {FS="|"} {print $1}' | sort | uniq -c | sort -rn | head -5
 
-# ------------------------------------------------------------------------------------------------
-# Show all processes
-ps -e
-# Show all processes with more details
-ps -el
-# Show the PID of a process
-pidof firefox
-# Show the PID of a process (another way)
-pgrep firefox
-# Combined with kill
-kill $(pgrep firefox)
-# Show running processes as a tree
-pstree
-# Show a running process as a tree
-pstree -p $(pgrep firefox)
-# Monitorize process
-top -H -p <pid>
 
 # ------------------------------------------------------------------------------------------------
 # Record all the terminal activities
@@ -341,6 +346,7 @@ xterm \
     -fa monaco -fs 14 +bdc -dc \
     -e ./demo
 
+# ------------------------------------------------------------------------------------------------
 # Show a popup
 notify-send 'WARNING' 'Temperature very high'
 
@@ -380,6 +386,15 @@ echo alias ccar=\''gcc -std=c17 -Wpedantic -Wall -Wextra -Wconversion -g -o demo
 echo | gcc -E -dM -x c -
 
 # ------------------------------------------------------------------------------------------------
+# gcc run preprocess and compilation steps to get assembler output
+gcc -S -O0 -o demo.s demo.c
+cat demo.s
+
+# ------------------------------------------------------------------------------------------------
+# gcc disassemble a program
+gcc -c -g demo.c && objdump -S -dr demo.o
+
+# ------------------------------------------------------------------------------------------------
 # gcc print dependencies of a file
 gcc -M demo.c
 # Same without system headers
@@ -416,10 +431,6 @@ readelf -sW program | awk '$3 != 0 && $4 == "FUNC" && $8 !~ /^ ?_/' | sort -k8
 readelf -sW program | awk '$3 != 0 && $4 == "FUNC" && $8 !~ /^ ?_/ {print $8}' | sort
 
 # ------------------------------------------------------------------------------------------------
-# Disassemble a program
-gcc -c -g demo.c && objdump -S -dr demo.o 
-
-# ------------------------------------------------------------------------------------------------
 # Show memory consumed by a process (writeable/private: is malloced) (sudo is required)
 sudo pmap -d $(pidof process)
 
@@ -437,6 +448,12 @@ cppcheck --std=c11 --enable=all --suppress=missingIncludeSystem .
 
 # ------------------------------------------------------------------------------------------------
 # Bash
+# ------------------------------------------------------------------------------------------------
+# Print environment variables
+printenv
+# ------------------------------------------------------------------------------------------------
+# Change bash prompt
+PS1="some text> "
 # ------------------------------------------------------------------------------------------------
 # Passing through command line arguments
 command "one" "two" "three"
