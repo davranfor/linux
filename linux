@@ -39,6 +39,10 @@ sudo dmesg -l err
 cat /etc/services
 
 # ------------------------------------------------------------------------------------------------
+# Obtain information specific to the Linux distribution
+lsb_release -a
+
+# ------------------------------------------------------------------------------------------------
 # Display file or file system status
 stat -c "%a %U:%G %n" demo
 # Output:
