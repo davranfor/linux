@@ -219,10 +219,10 @@ lsblk | grep -E --color '.*sda.*|$'
 sed -i '/^#/ s/^/begin /' foo.txt
 # Append the word " end" to all lines starting with '#' in file foo.txt
 sed -i '/^#/ s/$/ end/' foo.txt
-
-# ------------------------------------------------------------------------------------------------
 # Remove lines containing a specific text in a file
 sed -i '/text to delete/d' foo.txt
+# Colorize lines starting with # in green, white otherwise and send the contents to less
+sed "/^#/ s,.*,$(tput setaf 2)&$(tput sgr0)," $HOME/david/help/linux | less -R
 
 # ------------------------------------------------------------------------------------------------
 # Pack
