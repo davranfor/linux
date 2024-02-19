@@ -140,8 +140,10 @@ find . -name "foo" 2>/dev/null
 find . -name "foo" 2>&1 | grep -v 'Permission denied'
 # Replace all ocurrences of foo with bar in a folder
 find . -type f -exec sed -i 's/foo/bar/g' {} +
-# Same but filtering files with .c or .cpp or .h
-find . -regex '.*/.*\.\(c\|cpp\|h\)$' -exec sed -i 's/foo/bar/g' {} +
+# Same but filtering files with .c or .h
+find . \( -name "*.c" -o -name "*.h" \) -exec sed -i 's/foo/bar/g' {} +
+# Another way using regex
+find . -regex '.*/.*\.\(c\|h\)$' -exec sed -i 's/foo/bar/g' {} +
 # Search .js files not starting with "use strict"
 find . -name '*.js' -exec grep -L "^use strict" {} +
 find . -name '*.js' | xargs grep -L '^use strict'
@@ -225,6 +227,14 @@ sed -i '/text to delete/d' foo.txt
 sed "/^#/ s,.*,$(tput setaf 2)&$(tput sgr0)," $HOME/david/help/linux | less -R
 
 # ------------------------------------------------------------------------------------------------
+# heredoc to a file until EOF is written
+cat << EOF >> names.txt
+Jane Smith
+John Doe
+Alice Johnson
+EOF
+
+# ------------------------------------------------------------------------------------------------
 # Pack
 tar -cvf foo.tar foo
 # Pack multiple
@@ -293,7 +303,6 @@ echo "export HISTSIZE=1000" >> ~/.bashrc
 echo 'export HISTTIMEFORMAT="%d/%m/%y %T "' >> ~/.bashrc
 # Show the 5 most used commands
 history | awk '{print $2}' | awk 'BEGIN {FS="|"} {print $1}' | sort | uniq -c | sort -rn | head -5
-
 
 # ------------------------------------------------------------------------------------------------
 # Record all the terminal activities
@@ -386,6 +395,10 @@ echo "# C Compile and run" | tee -a ~/.bash_aliases
 echo alias ccar=\''gcc -std=c17 -Wpedantic -Wall -Wextra -Wconversion -g -o demo demo.c -lm && ./demo'\' | tee -a ~/.bash_aliases
 
 # ------------------------------------------------------------------------------------------------
+# gcc prevent the compiler from generating any object code
+ gcc -Wall -fsyntax-only list_of_files
+
+# ------------------------------------------------------------------------------------------------
 # gcc predefined macros
 echo | gcc -E -dM -x c -
 
@@ -433,6 +446,16 @@ readelf -sW program | awk '$3 != 0 && $4 == "FUNC" && $8 !~ /^ ?_/'
 readelf -sW program | awk '$3 != 0 && $4 == "FUNC" && $8 !~ /^ ?_/' | sort -k8
 # Same displaying only the function name (sorted)
 readelf -sW program | awk '$3 != 0 && $4 == "FUNC" && $8 !~ /^ ?_/ {print $8}' | sort
+
+# ------------------------------------------------------------------------------------------------
+# Dump the symbol table
+nm program
+# Display only external symbols
+nm -g program
+# Display only external and defined symbols 
+nm -gU program
+# Display only external and undefined symbols 
+nm -gu program
 
 # ------------------------------------------------------------------------------------------------
 # Show memory consumed by a process (writeable/private: is malloced) (sudo is required)
