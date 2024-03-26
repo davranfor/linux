@@ -228,11 +228,16 @@ sed "/^#/ s,.*,$(tput setaf 2)&$(tput sgr0)," $HOME/david/help/linux | less -R
 
 # ------------------------------------------------------------------------------------------------
 # heredoc to a file until EOF is written
-cat << EOF >> names.txt
+cat << EOF >> out.txt
+# and type
 Jane Smith
 John Doe
 Alice Johnson
 EOF
+# Exit heredoc on blank line instead of EOF
+cat << "" >> out.txt
+# Change the prompt title of heredoc
+PS2="david > "; cat << "" >> out.txt
 
 # ------------------------------------------------------------------------------------------------
 # Pack
@@ -433,6 +438,12 @@ gcc -Werror=format
 #pragma GCC diagnostic error "-Wformat"
 
 # ------------------------------------------------------------------------------------------------
+# Create AST tree for a project
+clang -Xclang -ast-dump -fsyntax-only src/*.c
+# Treat include dir as system headers
+clang -isystem./include -Xclang -ast-dump -fsyntax-only src/*.c
+
+# ------------------------------------------------------------------------------------------------
 # Check which libraries are needed to link for a given package
 pkg-config --libs glfw3
 # Returns `-lglfw`
@@ -533,6 +544,12 @@ done
 for f in $(find . -name '*.c' -or -name '*.cpp' -or -name '*.h'); do
     clang-tidy $f -header-filter=.* -checks=* -- -fblocks $f /dev/null 2>&1
 done
+# ------------------------------------------------------------------------------------------------
+#!/bin/bash
+# Read a line with readline (read -e)
+
+read -e -p "Enter your name: " name
+printf "Your name is '%s'\n" "$name"
 # ------------------------------------------------------------------------------------------------
 #!/bin/bash
 # Do not echo input coming from a terminal
