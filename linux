@@ -104,6 +104,10 @@ find . ! -path ./merged-file -type f -exec cat {} + > merged-file
 shuf -n 25 /usr/share/dict/words
 
 # ------------------------------------------------------------------------------------------------
+# Generate 10 random numbers from 100 to 999
+jot -r 10 100 999
+
+# ------------------------------------------------------------------------------------------------
 # Copy contents from a file to the clipboard
 xclip -selection clipboard -i < in.txt
 # Copy contents from the clipboard to a file
@@ -225,6 +229,12 @@ sed -i '/^#/ s/$/ end/' foo.txt
 sed -i '/text to delete/d' foo.txt
 # Colorize lines starting with # in green, white otherwise and send the contents to less
 sed "/^#/ s,.*,$(tput setaf 2)&$(tput sgr0)," $HOME/david/help/linux | less -R
+
+# ------------------------------------------------------------------------------------------------
+# Skip empty lines (NF)
+printf "One\n\nTwo\nThree\n" | awk '(NF) {print $0}'
+# Print lines with 2 columns
+printf "a\na b\na b c\n" | awk '(NF == 2) {print $0}'
 
 # ------------------------------------------------------------------------------------------------
 # heredoc to a file until EOF is written
@@ -482,7 +492,7 @@ ms_print massif.out.pid
 
 # ------------------------------------------------------------------------------------------------
 # Diagnostic
-cppcheck --std=c11 --enable=all --suppress=missingIncludeSystem .
+cppcheck --std=c11 --enable=all --inline-suppr --suppress=missingIncludeSystem --suppress=missingInclude .
 
 # ------------------------------------------------------------------------------------------------
 # Bash
