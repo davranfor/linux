@@ -133,6 +133,8 @@ find . -name "foo*"
 find . -name "*foo"
 # Search files containing foo
 find . -name "*foo*"
+# Search files ending with .v??? (exactly 3 chars after v), i.e. foo.v0001 
+find . -name "*.v???"
 # Same than previous calls but case insensitive (find "abc" and also "aBc")
 find . -iname "abc"
 # Find multiple names
@@ -204,6 +206,9 @@ grep \
     "(some)+.*(text)+"
 # same than
 grep -HnEiIr "(some)+.*(text)+"
+# Find lines from a list (`-f - data.txt` means take input from stdin)
+printf "Un perro afgano\nUn hombre calvo\nUn gato negro\n" > data.txt
+printf "gato\n\perro\n" | grep -f - data.txt 
 # Show number of apparences of the character ',' in a filtered line of the file foo.txt
 grep "extern int foo" foo.txt | tr -dc "," | wc -m
 # Exclude the word "available"
@@ -367,6 +372,10 @@ rsync source dest
 rsync --progress source dest
 
 # ------------------------------------------------------------------------------------------------
+# curl post request
+curl -X POST http://localhost:1234/users/ -H "Content-Type: application/json" -d '{"key":"value"}'
+
+# ------------------------------------------------------------------------------------------------
 # Customize xterm window
 xterm \
     -title "Some title" -geometry 80x24+50+50 \
@@ -492,7 +501,11 @@ ms_print massif.out.pid
 
 # ------------------------------------------------------------------------------------------------
 # Diagnostic
-cppcheck --std=c11 --enable=all --inline-suppr --suppress=missingIncludeSystem --suppress=missingInclude .
+cppcheck --std=c11 --enable=all --inline-suppr --suppress=missingInclude --suppress=missingIncludeSystem .
+
+# ------------------------------------------------------------------------------------------------
+# Generate core dump of a running program
+gcore $(pidof program)
 
 # ------------------------------------------------------------------------------------------------
 # Bash
