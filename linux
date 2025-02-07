@@ -20,6 +20,8 @@ cat /proc/meminfo
 cat /proc/cpuinfo
 # Process information
 cat /proc/$(pidof process)/status
+# Virtual memory used by a process
+cat /proc/$(pidof process)/stat | awk '{print $23}'
 # Monitorize region of contiguous virtual memory in a process or thread
 # Last 50 lines - Refresh every 0.1 seconds
 watch -n 0.1 tail -50 /proc/<pid>/maps
@@ -87,6 +89,14 @@ pstree -p $(pgrep firefox)
 top -H -p <pid>
 
 # ------------------------------------------------------------------------------------------------
+# List files in a tree-like form
+tree
+# Show hidden files
+tree -a
+# Limit the depth of the directory tree
+tree -L 2
+
+# ------------------------------------------------------------------------------------------------
 # Mount partition
 echo "/dev/sdb1 /home/foo   ext4    user    0   0" | tee -a /etc/fstab
 mount -a
@@ -106,6 +116,8 @@ shuf -n 25 /usr/share/dict/words
 # ------------------------------------------------------------------------------------------------
 # Generate 10 random numbers from 100 to 999
 jot -r 10 100 999
+# Generate random number from 100 to 99
+echo $((10 + $RANDOM % 99))
 
 # ------------------------------------------------------------------------------------------------
 # Copy contents from a file to the clipboard
