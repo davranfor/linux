@@ -114,9 +114,7 @@ find . ! -path ./merged-file -type f -exec cat {} + > merged-file
 shuf -n 25 /usr/share/dict/words
 
 # ------------------------------------------------------------------------------------------------
-# Generate 10 random numbers from 100 to 999
-jot -r 10 100 999
-# Generate random number from 100 to 99
+# Generate random number from 10 to 99
 echo $((10 + $RANDOM % 99))
 
 # ------------------------------------------------------------------------------------------------
@@ -287,7 +285,25 @@ tar -czvf foo.tar.gz /home/foobar --exclude=/home/foo --exclude=/home/bar
 tar -xzvf foo.tar.gz
 
 # ------------------------------------------------------------------------------------------------
+# zip folder and set correct permissions to resulting zip
+zip --symlinks -r filename.zip foldername
+chmod 664 filename.zip
+
+# ------------------------------------------------------------------------------------------------
+# unzip
+unzip filename.zip
+# unzip to a directory
+unzip filename.zip -d foldername
+
+# ------------------------------------------------------------------------------------------------
+# View zip information without extracting
+zipinfo filename.zip
+# Send zipinfo to tree
+zipinfo -1 filename.zip | tree --fromfile
+
+# ------------------------------------------------------------------------------------------------
 # Copy device drivers
+# 'fdisk -l' and 'lsblk' to show partitions (don't forget to call 'sync' at the end when done)
 # From image to device
 sudo dd if=/some/path/file.img of=/dev/sda
 # From device to image
@@ -298,6 +314,8 @@ sudo dd if=/dev/sda | gzip -c > /some/path/file.img.gz
 sudo dd if=/dev/sda of=/some/path/file.img status=progress
 # Read and write up to 2 megas at a time (default is 512 bytes)
 sudo dd if=/dev/sda of=/some/path/file.img bs=2M
+# Copy an ISO to USB drive
+sudo dd if=/path/to/filename.iso of=/dev/sdX bs=4M status=progress oflag=sync
 
 # ------------------------------------------------------------------------------------------------
 # Generate random UUID
@@ -356,7 +374,7 @@ echo cañón | iconv -f utf-8 -t ascii//TRANSLIT
 
 # ------------------------------------------------------------------------------------------------
 # Download in quiet mode a raw file from github and store the file in a temp folder
-wget -q https://raw.githubusercontent.com/davranfor/linux/main/commands -O $HOME/temp/commands
+wget -q https://raw.githubusercontent.com/davranfor/linux/main/linux -O $HOME/temp/commands
 
 # ------------------------------------------------------------------------------------------------
 # python web server in one line
@@ -545,7 +563,8 @@ command < file
 command1 && command2
 # Another way
 if command1; then
-command2
+    command2
+fi
 # ------------------------------------------------------------------------------------------------
 #!/bin/bash
 # for each dir
@@ -648,4 +667,20 @@ fi
 red='\033[0;31m'
 noc='\033[0m' # No Color
 printf "one ${red}two${noc} three\n"
+# ------------------------------------------------------------------------------------------------
+#!/bin/bash
+# Show table of colors
+for i in {0..255}; do
+    printf "\e[48;5;%dm Color %3d \e[0m\n" "$i" "$i"
+done
+# ------------------------------------------------------------------------------------------------
+#!/bin/bash
+# Double-height mode
+var="Some text";
+printf "\e#3%s\n" "$var"
+printf "\e#4%s\n" "$var"
+
+# ------------------------------------------------------------------------------------------------
+# Nice font for bash terminal
+sudo apt install fonts-firacode
 
