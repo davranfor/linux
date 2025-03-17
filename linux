@@ -63,7 +63,7 @@ awk -F: '{print $1}' /etc/passwd
 cat /etc/passwd | cut -d: -f1
 
 # ------------------------------------------------------------------------------------------------
-# Show all groups
+# Show all groups (F: means separate by :)
 awk -F: '{print $1}' /etc/group
 # Another way
 cat /etc/group | cut -d: -f1
@@ -114,8 +114,8 @@ find . ! -path ./merged-file -type f -exec cat {} + > merged-file
 shuf -n 25 /usr/share/dict/words
 
 # ------------------------------------------------------------------------------------------------
-# Generate random number from 10 to 99
-echo $((10 + $RANDOM % 99))
+# Generate random number from 1 to 99
+echo $((1 + $RANDOM % 99))
 
 # ------------------------------------------------------------------------------------------------
 # Copy contents from a file to the clipboard
@@ -163,6 +163,10 @@ find . -regex '.*/.*\.\(c\|h\)$' -exec sed -i 's/foo/bar/g' {} +
 # Search .js files not starting with "use strict"
 find . -name '*.js' -exec grep -L "^use strict" {} +
 find . -name '*.js' | xargs grep -L '^use strict'
+# List all files with a sequential number in front
+find . -type f | awk '{print NR, $0}'
+# With details
+find . -type f -print0 | xargs -0 -n1 ls -l | nl
 # Find all ocurrences of foo in a folder
 find . -type f -exec grep 'foo' {} +
 # Combine find and ls
@@ -597,6 +601,14 @@ done
 # For each c/cpp/h file get a diagnosis with clang-tidy
 for f in $(find . -name '*.c' -or -name '*.cpp' -or -name '*.h'); do
     clang-tidy $f -header-filter=.* -checks=* -- -fblocks $f /dev/null 2>&1
+done
+# ------------------------------------------------------------------------------------------------
+#!/bin/bash
+# List files with a sequential number in front
+n=1
+find . -type f | while read -r file; do
+    echo "$n $file"
+    n=$((n + 1))
 done
 # ------------------------------------------------------------------------------------------------
 #!/bin/bash
