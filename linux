@@ -225,10 +225,14 @@ printf "Un perro afgano\nUn hombre calvo\nUn gato negro\n" > data.txt
 printf "gato\n\perro\n" | grep -f - data.txt 
 # Show number of apparences of the character ',' in a filtered line of the file foo.txt
 grep "extern int foo" foo.txt | tr -dc "," | wc -m
+# Show lines ending with a space
+grep '[[:space:]]$' foo.txt
 # Exclude the word "available"
 printf "a\nis\nnot\navailable\nor\nis\ndisabled\n" | grep -v "available"
 # Exclude the word "available" or "disabled"
 printf "a\nis\nnot\navailable\nor\nis\ndisabled\n" | grep -Ev "available|disabled"
+# Discard duplicated fields
+printf "192.168.1.1 A\n192.168.1.2 B\n192.168.1.1 C\n" | grep "192.168.1.1" | awk '!seen[$1]++'
 # Colorize words containing "main" in a file
 grep -E --color 'main|$' demo.c
 # Colorize lines containing "main" in a file
@@ -247,7 +251,7 @@ sed -i '/^#/ s/$/ end/' foo.txt
 # Remove lines containing a specific text in a file
 sed -i '/text to delete/d' foo.txt
 # Colorize lines starting with # in green, white otherwise and send the contents to less
-sed "/^#/ s,.*,$(tput setaf 2)&$(tput sgr0)," $HOME/david/help/linux | less -R
+sed "/^#/ s,.*,$(tput setaf 2)&$(tput sgr0)," ~/help/linux | less -R
 
 # ------------------------------------------------------------------------------------------------
 # Skip empty lines (NF)
@@ -359,11 +363,18 @@ echo 'export HISTTIMEFORMAT="%d/%m/%y %T "' >> ~/.bashrc
 history | awk '{print $2}' | awk 'BEGIN {FS="|"} {print $1}' | sort | uniq -c | sort -rn | head -5
 
 # ------------------------------------------------------------------------------------------------
-# Record all the terminal activities
+# Record terminal session to a file
 script out
 # write commands here
 exit
 cat out
+# Append to an existing file
+script -a out
+# With timestamp
+script -t out
+# Silent mode (without the "Script started" advice)
+script -q out
+
 
 # ------------------------------------------------------------------------------------------------
 # Run commands in parallel
@@ -398,6 +409,11 @@ ssh -X user@domain program
 scp file.txt user@domain:/remote/directory
 # copy a remote file to a local file
 scp user@domain:/remote/file file.txt
+# Connect to ssh and scp without password
+# Generate private and public keys (id_rsa and id_rsa.pub)
+ssh-keygen -t rsa -b 4096
+# Copy the public key (adds the public key id_rsa.pub to ~/.ssh/authorized_keys on remote server)
+ssh-copy-id remote_user@remote_host
 
 # ------------------------------------------------------------------------------------------------
 # Copy files from remote or local host
@@ -685,6 +701,11 @@ printf "one ${red}two${noc} three\n"
 for i in {0..255}; do
     printf "\e[48;5;%dm Color %3d \e[0m\n" "$i" "$i"
 done
+# ------------------------------------------------------------------------------------------------
+#!/bin/bash
+# Set text on the terminal title bar
+
+printf "\033]0;%s\a" "This text is placed on the window title bar"
 # ------------------------------------------------------------------------------------------------
 #!/bin/bash
 # Double-height mode
