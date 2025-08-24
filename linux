@@ -102,6 +102,13 @@ echo "/dev/sdb1 /home/foo   ext4    user    0   0" | tee -a /etc/fstab
 mount -a
 
 # ------------------------------------------------------------------------------------------------
+# Change user password
+passwd
+# Change another user password
+sudo passwd user_name
+
+
+# ------------------------------------------------------------------------------------------------
 # Concatenate 2 files
 cat file2 >> file1
 # Merge all files in a directory into a single file
@@ -293,9 +300,8 @@ tar -czvf foo.tar.gz /home/foobar --exclude=/home/foo --exclude=/home/bar
 tar -xzvf foo.tar.gz
 
 # ------------------------------------------------------------------------------------------------
-# zip folder and set correct permissions to resulting zip
+# zip folder and includes the symbolic link but does not include the actual content it points to
 zip --symlinks -r filename.zip foldername
-chmod 664 filename.zip
 
 # ------------------------------------------------------------------------------------------------
 # unzip
@@ -424,6 +430,16 @@ rsync --progress source dest
 # ------------------------------------------------------------------------------------------------
 # curl post request
 curl -X POST http://localhost:1234/users/ -H "Content-Type: application/json" -d '{"key":"value"}'
+
+
+# ------------------------------------------------------------------------------------------------
+# netcat (or simply nc) server listen on port 8081
+netcat -l -p 8081
+# netcat client send text
+printf "Hi there!!!\n" | netcat 192.168.1.2 8081
+# netcat client send file
+netcat 192.168.1.2 8081 < file.txt
+
 
 # ------------------------------------------------------------------------------------------------
 # Customize xterm window
