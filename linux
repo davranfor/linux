@@ -139,6 +139,13 @@ date "+%d-%m-%Y - %H:%M:%S"
 timedatectl
 
 # ------------------------------------------------------------------------------------------------
+# Copy files preserving
+# Preserves permissions, owner, timestamps
+cp -p source target
+# Preserves everything possible, like a "clone"
+cp -a source target
+
+# ------------------------------------------------------------------------------------------------
 # All those commands using find are recursive
 # Search file foo.bar
 find . -name "foo.bar"
