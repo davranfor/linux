@@ -218,7 +218,7 @@ find . -name "*.txt" -exec echo {} +
 cat file | grep "^foo"
 # Find lines ending with foo
 cat file | grep "foo$"
-# Find lines whose thirsd character is 'r'
+# Find lines whose third character is 'r'
 cat file | grep "^..r"
 # Find lines containing "error" but discards those containing "file not found"
 cat file | grep -v "file not found" | grep "error:"
