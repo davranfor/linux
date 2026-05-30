@@ -431,8 +431,14 @@ scp user@domain:/remote/file file.txt
 # Connect to ssh and scp without password
 # Generate private and public keys (id_rsa and id_rsa.pub)
 ssh-keygen -t rsa -b 4096
-# Copy the public key (adds the public key id_rsa.pub to ~/.ssh/authorized_keys on remote server)
+# ... then copy the public key
+#     adds the public key id_rsa.pub to ~/.ssh/authorized_keys on remote server
 ssh-copy-id remote_user@remote_host
+# Establishes an interactive connection without showing banners nor MOTD (message of the day)
+ssh -t user@host "bash --noprofile --norc" 2>/dev/null << EOF
+cd backup
+ls
+EOF
 
 # ------------------------------------------------------------------------------------------------
 # Copy files from remote or local host
