@@ -458,7 +458,6 @@ printf "Hi there!!!\n" | netcat 192.168.1.2 8081
 # netcat client send file
 netcat 192.168.1.2 8081 < file.txt
 
-
 # ------------------------------------------------------------------------------------------------
 # Customize xterm window
 xterm \
