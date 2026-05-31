@@ -450,7 +450,6 @@ rsync --progress source dest
 # curl post request
 curl -X POST http://localhost:1234/users/ -H "Content-Type: application/json" -d '{"key":"value"}'
 
-
 # ------------------------------------------------------------------------------------------------
 # netcat (or simply nc) server listen on port 8081
 netcat -l -p 8081
