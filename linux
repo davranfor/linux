@@ -394,7 +394,6 @@ script -t out
 # Silent mode (without the "Script started" advice)
 script -q out
 
-
 # ------------------------------------------------------------------------------------------------
 # Run commands in parallel
 ./command1 & ./command2 &
